@@ -1,36 +1,42 @@
-package ar.edu.itba.ss.tp1;
+package ar.edu.itba.ss.tp1.models;
+
+import java.math.BigDecimal;
 
 public class Agent {
     // Variables
-    private Double x;
-    private Double y;
+    private Integer agentID;
+    private BigDecimal x;
+    private BigDecimal y;
     private Double vx;
     private Double vy;
     private Double radius;
+    private Double param;
 
     // Constructor
-    public Agent(Double x, Double y, Double vx, Double vy, Double radius) {
+    public Agent(BigDecimal x, BigDecimal y, Double vx, Double vy, Double radius) {
+        // this.agentID =
         this.x = x;
         this.y = y;
         this.vx = vx;
         this.vy = vy;
         this.radius = radius;
+        this.param = 0.0;
     }
 
     // Methods
-    public Double getX() {
+    public BigDecimal getX() {
         return x;
     }
 
-    public void setX(Double x) {
+    public void setX(BigDecimal x) {
         this.x = x;
     }
 
-    public Double getY() {
+    public BigDecimal getY() {
         return y;
     }
 
-    public void setY(Double y) {
+    public void setY(BigDecimal y) {
         this.y = y;
     }
 

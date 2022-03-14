@@ -1,4 +1,6 @@
-package ar.edu.itba.ss.tp1;
+package ar.edu.itba.ss.tp1.models;
+
+import ar.edu.itba.ss.tp1.models.Agent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
