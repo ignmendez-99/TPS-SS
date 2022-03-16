@@ -22,6 +22,8 @@ public class Cell {
         return agents;
     }
 
+    public Integer getAgentQty() { return agentQty; }
+
     public void addAgents (Agent[] a) {
         this.agents.addAll(Arrays.asList(a));
         this.agentQty = a.length;

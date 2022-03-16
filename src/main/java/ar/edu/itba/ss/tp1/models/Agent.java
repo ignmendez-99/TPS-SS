@@ -1,10 +1,14 @@
 package ar.edu.itba.ss.tp1.models;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public class Agent {
+
+    // Global Variables
+    private static Integer counterId = 0;
+    private String id;
     // Variables
-    private Integer agentID;
     private BigDecimal x;
     private BigDecimal y;
     private Double vx;
@@ -14,7 +18,8 @@ public class Agent {
 
     // Constructor
     public Agent(BigDecimal x, BigDecimal y, Double vx, Double vy, Double radius) {
-        // this.agentID =
+        counterId++;
+        this.id = counterId.toString();
         this.x = x;
         this.y = y;
         this.vx = vx;
@@ -24,6 +29,11 @@ public class Agent {
     }
 
     // Methods
+
+    public String getId() {
+        return id;
+    }
+
     public BigDecimal getX() {
         return x;
     }
