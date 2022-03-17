@@ -3,7 +3,6 @@ package ar.edu.itba.ss.tp1.models;
 import ar.edu.itba.ss.tp1.parsers.OutputParser;
 
 import java.awt.geom.Point2D;
-import java.awt.image.AreaAveragingScaleFilter;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -11,7 +10,7 @@ import java.util.stream.Collectors;
 public class Universe {
 
     //Variables
-    private static Integer N;
+    private final Integer N;
     private final Double L;
     private final Integer M;
     private final Boolean periodic;
@@ -22,8 +21,8 @@ public class Universe {
     private final Map<String, List<String>> particleWithNeighbours;
     private final Map<String, Pair<Agent, Agent>> relationHashMap;
 
-    private long startTime;
-    private long endTime;
+    private final Long startTime;
+    private Long endTime;
 
     // Constructor
     public Universe(List<Pair<Double, Double>> staticInfo, List<Pair<Double, Double>> dynamicInfo, Integer m, Boolean periodic, Double rc) {
@@ -40,8 +39,22 @@ public class Universe {
         createGrid();
     }
 
+    // Constructor for when we have random agents
+    public Universe(Set<Agent> agents, Integer n, Integer m, Double l, Boolean periodic, Double rc) {
+        startTime = System.currentTimeMillis();
+        N = n;
+        L = l;
+        M = m;
+        RC = rc;
+        this.agents = agents;
+        this.periodic = periodic;
+        particleWithNeighbours = new HashMap<>();
+        relationHashMap = new HashMap<>();
+        createGrid();
+    }
+
     // Methods
-    private static Set<Agent> populate(List<Pair<Double, Double>> staticInfo, List<Pair<Double, Double>> dynamicInfo ){
+    private Set<Agent> populate(List<Pair<Double, Double>> staticInfo, List<Pair<Double, Double>> dynamicInfo ){
         int overlaped = 0;
         Set<Agent> aux= new TreeSet<>(new Comparator<Agent>() {
             @Override
@@ -191,7 +204,8 @@ public class Universe {
         endTime = System.currentTimeMillis();
         OutputParser op = new OutputParser();
 
-        op.buildOutput(particleWithNeighbours, "output", endTime-startTime);
+        //op.buildOutput(particleWithNeighbours, "output", endTime-startTime);
+        op.buildOutput2(particleWithNeighbours, "output", endTime-startTime, N, "66", agents);
     }
 
     private enum PeriodicType {
@@ -285,6 +299,9 @@ public class Universe {
         }
     }
 
+    /**
+     * Printea la grid para que sea mas facil debuggear
+     */
     public void printGrid() {
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid.length; j++) {
@@ -294,7 +311,39 @@ public class Universe {
         }
     }
 
-    public Map<String, List<String>> getParticleWithNeighbours() {
-        return particleWithNeighbours;
+    public static Set<Agent> generateRandomAgents(Integer n, Double l, Double radius){
+        Random random = new Random();
+        Set<Agent> aux= new TreeSet<>(new Comparator<Agent>() {
+            @Override
+            public int compare(Agent o1, Agent o2) {
+                if(Objects.equals(o1.getX(), o2.getX()) && Objects.equals(o1.getY(), o2.getY())) {
+                    // Same position ==> same particle
+                    return 0;
+                }
+                double x1 = o1.getX().doubleValue();
+                double y1 = o1.getY().doubleValue();
+                double x2 = o2.getX().doubleValue();
+                double y2 = o2.getY().doubleValue();
+                if(Point2D.distance(x1, y1, x2, y2) - (o1.getRadius()+o2.getRadius()) < 0.0) {
+                    // If both particles intersect ==> same particle
+                    return 0;
+                }
+                return 1;
+            }
+        });
+        double x, y;
+        while(aux.size()!=n) {
+            x = random.nextDouble() * l;
+            y = random.nextDouble() * l;
+            Agent newAgent = new Agent(
+                    new BigDecimal(x),
+                    new BigDecimal(y),
+                    0.0,0.0,
+                    radius);
+            if (!aux.contains(newAgent)) {
+                aux.add(newAgent);
+            }
+        }
+        return aux;
     }
 }
