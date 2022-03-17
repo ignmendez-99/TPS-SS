@@ -7,7 +7,7 @@ public class Agent {
 
     // Global Variables
     private static Integer counterId = 0;
-    private String id;
+    private final String id;
     // Variables
     private BigDecimal x;
     private BigDecimal y;

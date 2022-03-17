@@ -1,7 +1,5 @@
 package ar.edu.itba.ss.tp1.models;
 
-import ar.edu.itba.ss.tp1.models.Agent;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -9,7 +7,7 @@ import java.util.List;
 public class Cell {
 
     private Integer agentQty;
-    private List<Agent> agents;
+    private final List<Agent> agents;
 
 
     public Cell() {

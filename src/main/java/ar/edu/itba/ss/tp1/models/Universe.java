@@ -1,13 +1,7 @@
 package ar.edu.itba.ss.tp1.models;
 
-import ar.edu.itba.ss.tp1.models.Agent;
-import ar.edu.itba.ss.tp1.models.Cell;
-
 import java.awt.geom.Point2D;
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -15,15 +9,15 @@ public class Universe {
 
     //Variables
     private static Integer N;
-    private Double L;
-    private Integer M;
-    private Boolean periodic;
-    private Double RC;
-    private Set<Agent> agents;
+    private final Double L;
+    private final Integer M;
+    private final Boolean periodic;
+    private final Double RC;
+    private final Set<Agent> agents;
 
     private Cell[][] grid;
-    private Map<String, List<String>> particleWithNeighbours;
-    private Map<String, Pair<Agent, Agent>> relationHashMap;
+    private final Map<String, List<String>> particleWithNeighbours;
+    private final Map<String, Pair<Agent, Agent>> relationHashMap;
 
     // Constructor
     public Universe(List<Pair<Double, Double>> staticInfo, List<Pair<Double, Double>> dynamicInfo, Integer m, Boolean periodic, Double rc) {
@@ -34,42 +28,51 @@ public class Universe {
         RC = rc;
         agents = populate(staticInfo, dynamicInfo);
         this.periodic = periodic;
-        this.particleWithNeighbours = new HashMap<>();
-        this.relationHashMap = new HashMap<>();
+        particleWithNeighbours = new HashMap<>();
+        relationHashMap = new HashMap<>();
         createGrid();
     }
 
     // Methods
     private static Set<Agent> populate(List<Pair<Double, Double>> staticInfo, List<Pair<Double, Double>> dynamicInfo ){
-        Random random = new Random();
         int overlaped = 0;
         Set<Agent> aux= new TreeSet<>(new Comparator<Agent>() {
             @Override
             public int compare(Agent o1, Agent o2) {
                 if(Objects.equals(o1.getX(), o2.getX()) && Objects.equals(o1.getY(), o2.getY())) {
+                    // Same position ==> same particle
                     return 0;
                 }
-                if((Math.sqrt(Math.pow(o1.getX().doubleValue()-o2.getX().doubleValue(),2)+Math.pow(o1.getY().doubleValue()-o2.getY().doubleValue(),2))-(o1.getRadius()+o2.getRadius())) < 0.0) {
+                double x1 = o1.getX().doubleValue();
+                double y1 = o1.getY().doubleValue();
+                double x2 = o2.getX().doubleValue();
+                double y2 = o2.getY().doubleValue();
+                if(Point2D.distance(x1, y1, x2, y2) - (o1.getRadius()+o2.getRadius()) < 0.0) {
+                    // If both particles intersect ==> same particle
                     return 0;
                 }
                 return 1;
             }
         });
         for (int i = 0 ; i < N ; i++) {
-            Agent a = new Agent(new BigDecimal(dynamicInfo.get(i).first), new BigDecimal(dynamicInfo.get(i).second),0.0,0.0,staticInfo.get(i).first);
+            Agent a = new Agent(
+                    new BigDecimal(dynamicInfo.get(i).first),
+                    new BigDecimal(dynamicInfo.get(i).second),
+                    0.0,0.0,
+                    staticInfo.get(i).first);
             if(!aux.add(a))
                 overlaped++;
         }
-        System.out.println("Found "+overlaped+" overlaped entities. Entities added = "+(N-overlaped)+".");
+        System.out.println("Found " + overlaped + " overlaped entities. Entities added = " + (N-overlaped) + ".");
         return aux;
     }
 
     private void createGrid() {
-        double cellSize = this.L/this.M;
-        this.grid = new Cell[this.M][this.M];
-        for (int i = 0; i < this.M; i++) {
-            for (int j = 0; j < this.M; j++) {
-                this.grid[i][j] = new Cell();
+        double cellSize = L/M;
+        grid = new Cell[M][M];
+        for (int i = 0; i < M; i++) {
+            for (int j = 0; j < M; j++) {
+                grid[i][j] = new Cell();
                 int finalI = i;
                 int finalJ = j;
                 List<Agent> auxList = agents.stream()
@@ -80,83 +83,83 @@ public class Universe {
                 for (int k = 0; k < auxList.size(); k++) {
                     auxArray[k] = auxList.get(k);
                 }
-                this.grid[i][j].addAgents(auxArray);
+                grid[i][j].addAgents(auxArray);
             }
         }
     }
 
     public void calculateDistances(){
-        for (int i = 0; i < this.M; i++) {
-            for (int j = 0; j < this.M; j++) {
+        for (int i = 0; i < M; i++) {
+            for (int j = 0; j < M; j++) {
 
                 // CENTRAL ==> No tiene verificaciones
-                Cell centerCell = this.grid[i][j];
+                Cell centerCell = grid[i][j];
 
                 // UPPER RIGHT ==> Tiene verificaciones
-                Cell rightUpperCell = null;
+                Cell rightUpperCell;
                 PeriodicType rightUpperCellType;
-                if ((i - 1) < 0 && (j + 1 <= this.M-1) && this.periodic) {
-                    rightUpperCell = this.grid[this.M-1][j + 1];
+                if ((i - 1) < 0 && (j + 1 <= M-1) && periodic) {
+                    rightUpperCell = grid[M-1][j + 1];
                     rightUpperCellType = PeriodicType.UPPER;
-                } else if ((i - 1 >= 0) && (j + 1 > this.M-1) && this.periodic) {
-                    rightUpperCell = this.grid[i - 1][0];
+                } else if ((i - 1 >= 0) && (j + 1 > M-1) && periodic) {
+                    rightUpperCell = grid[i - 1][0];
                     rightUpperCellType = PeriodicType.RIGHT;
-                } else if ((i - 1 < 0) && (j + 1 > this.M-1) && this.periodic) {
-                    rightUpperCell = this.grid[this.M-1][0];
+                } else if ((i - 1 < 0) && (j + 1 > M-1) && periodic) {
+                    rightUpperCell = grid[M-1][0];
                     rightUpperCellType = PeriodicType.UPPER_RIGHT;
-                } else if(((i-1 < 0) || (j+1>this.M-1)) && !this.periodic) {
+                } else if(((i-1 < 0) || (j+1>M-1)) && !periodic) {
                     rightUpperCell = null;
                     rightUpperCellType = PeriodicType.NO_PERIODIC;
                 }else {
-                    rightUpperCell = this.grid[i - 1][j + 1];
+                    rightUpperCell = grid[i - 1][j + 1];
                     rightUpperCellType = PeriodicType.NO_PERIODIC;
                 }
 
                 // RIGHT ==> Tiene verificaciones
-                Cell rightCell = null;
+                Cell rightCell;
                 PeriodicType rightCellType;
-                if ((j+1)>this.M-1 && this.periodic) {
-                    rightCell = this.grid[i][0];
+                if ((j+1)>M-1 && periodic) {
+                    rightCell = grid[i][0];
                     rightCellType = PeriodicType.RIGHT;
-                } else if ((j+1)>this.M-1 && !this.periodic) {
+                } else if ((j+1)>M-1 && !periodic) {
                     rightCell = null;
                     rightCellType = PeriodicType.NO_PERIODIC;
                 } else {
-                    rightCell = this.grid[i][j + 1];
+                    rightCell = grid[i][j + 1];
                     rightCellType = PeriodicType.NO_PERIODIC;
                 }
 
                 // RIGHT BOTTOM ==> Tiene verificaciones
-                Cell rightBottomCell = null;
+                Cell rightBottomCell;
                 PeriodicType rightBottomCellType;
-                if((i+1 > this.M-1) && (j+1) <= this.M-1 && this.periodic) {
-                    rightBottomCell = this.grid[0][j + 1];
+                if((i+1 > M-1) && (j+1) <= M-1 && periodic) {
+                    rightBottomCell = grid[0][j + 1];
                     rightBottomCellType = PeriodicType.BOTTOM;
-                } else if((i+1 <= this.M-1) && (j+1)>this.M-1 && this.periodic) {
-                    rightBottomCell = this.grid[i + 1][0];
+                } else if((i+1 <= M-1) && (j+1)>M-1 && periodic) {
+                    rightBottomCell = grid[i + 1][0];
                     rightBottomCellType = PeriodicType.RIGHT;
-                } else if((i+1 > this.M-1) && (j+1)>this.M-1 && this.periodic) {
-                    rightBottomCell = this.grid[0][0];
+                } else if((i+1 > M-1) && (j+1)>M-1 && periodic) {
+                    rightBottomCell = grid[0][0];
                     rightBottomCellType = PeriodicType.BOTTOM_RIGHT;
-                } else if(((i+1>this.M-1) || (j+1>this.M-1)) && !this.periodic) {
+                } else if(((i+1>M-1) || (j+1>M-1)) && !periodic) {
                     rightBottomCell = null;
                     rightBottomCellType = PeriodicType.NO_PERIODIC;
                 } else {
-                    rightBottomCell = this.grid[i + 1][j + 1];
+                    rightBottomCell = grid[i + 1][j + 1];
                     rightBottomCellType = PeriodicType.NO_PERIODIC;
                 }
 
                 // BOTTOM ==> Tiene verificaciones
-                Cell bottomCell = null;
+                Cell bottomCell;
                 PeriodicType bottomCellType;
-                if((i+1) > this.M-1 && this.periodic) {
-                    bottomCell = this.grid[0][j];
+                if((i+1) > M-1 && periodic) {
+                    bottomCell = grid[0][j];
                     bottomCellType = PeriodicType.BOTTOM;
-                } else if ((i+1 > this.M-1) && !this.periodic) {
+                } else if ((i+1 > M-1) && !periodic) {
                     bottomCell = null;
                     bottomCellType = PeriodicType.NO_PERIODIC;
                 } else {
-                    bottomCell = this.grid[i + 1][j];
+                    bottomCell = grid[i + 1][j];
                     bottomCellType = PeriodicType.NO_PERIODIC;
                 }
 
@@ -220,7 +223,7 @@ public class Universe {
                                 dist = Point2D.distance(
                                         agent.getX().doubleValue(),
                                         agent.getY().doubleValue(),
-                                        a.getX().doubleValue() + this.L,
+                                        a.getX().doubleValue() + L,
                                         a.getY().doubleValue());
                                 break;
                             case BOTTOM:
@@ -228,31 +231,31 @@ public class Universe {
                                         agent.getX().doubleValue(),
                                         agent.getY().doubleValue(),
                                         a.getX().doubleValue(),
-                                        a.getY().doubleValue() + this.L);
+                                        a.getY().doubleValue() + L);
                                 break;
                             case UPPER:
                                 dist = Point2D.distance(
                                         agent.getX().doubleValue(),
                                         agent.getY().doubleValue(),
                                         a.getX().doubleValue(),
-                                        a.getY().doubleValue() - this.L);
+                                        a.getY().doubleValue() - L);
                                 break;
                             case UPPER_RIGHT:
                                 dist = Point2D.distance(
                                         agent.getX().doubleValue(),
                                         agent.getY().doubleValue(),
-                                        a.getX().doubleValue() + this.L,
-                                        a.getY().doubleValue() - this.L);
+                                        a.getX().doubleValue() + L,
+                                        a.getY().doubleValue() - L);
                                 break;
                             case BOTTOM_RIGHT:
                                 dist = Point2D.distance(
                                         agent.getX().doubleValue(),
                                         agent.getY().doubleValue(),
-                                        a.getX().doubleValue() + this.L,
-                                        a.getY().doubleValue() + this.L);
+                                        a.getX().doubleValue() + L,
+                                        a.getY().doubleValue() + L);
                                 break;
                         }
-                        if (dist < this.RC) {
+                        if (dist < RC) {
                             auxList.add(a.getId());
                             relationHashMap.put(agent.getId() + a.getId(), new Pair<>(agent, a));
                         }
@@ -274,6 +277,6 @@ public class Universe {
     }
 
     public Map<String, List<String>> getParticleWithNeighbours() {
-        return this.particleWithNeighbours;
+        return particleWithNeighbours;
     }
 }
