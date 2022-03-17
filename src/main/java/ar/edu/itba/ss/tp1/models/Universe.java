@@ -1,6 +1,9 @@
 package ar.edu.itba.ss.tp1.models;
 
+import ar.edu.itba.ss.tp1.parsers.OutputParser;
+
 import java.awt.geom.Point2D;
+import java.awt.image.AreaAveragingScaleFilter;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -19,8 +22,12 @@ public class Universe {
     private final Map<String, List<String>> particleWithNeighbours;
     private final Map<String, Pair<Agent, Agent>> relationHashMap;
 
+    private long startTime;
+    private long endTime;
+
     // Constructor
     public Universe(List<Pair<Double, Double>> staticInfo, List<Pair<Double, Double>> dynamicInfo, Integer m, Boolean periodic, Double rc) {
+        startTime = System.currentTimeMillis();
         N = staticInfo.get(0).first.intValue();
         L = staticInfo.get(0).second;
         staticInfo.remove(0);
@@ -181,6 +188,10 @@ public class Universe {
                 }
             }
         }
+        endTime = System.currentTimeMillis();
+        OutputParser op = new OutputParser();
+
+        op.buildOutput(particleWithNeighbours, "output", endTime-startTime);
     }
 
     private enum PeriodicType {
@@ -202,9 +213,9 @@ public class Universe {
                 auxList = neighbours;
             }
             for (Agent a : cell.getAgents()) {
-                String relationId1 = agent.getId() + a.getId();
-                String relationId2 = a.getId() + agent.getId();
-                if ( agent.getId() != a.getId() ) {
+                String relationId1 = agent.getId() + " " + a.getId();
+                String relationId2 = a.getId() + " " + agent.getId();
+                if (!agent.getId().equals(a.getId())) {
                     if (relationHashMap.containsKey(relationId1) || relationHashMap.containsKey(relationId2)) {
                         // Ya sabemos que son vecinas, no hace falta calcular la distancia
                         auxList.add(a.getId());
@@ -223,29 +234,29 @@ public class Universe {
                                 dist = Point2D.distance(
                                         agent.getX().doubleValue(),
                                         agent.getY().doubleValue(),
-                                        a.getX().doubleValue() + L,
-                                        a.getY().doubleValue());
+                                        a.getX().doubleValue(),
+                                        a.getY().doubleValue() + L);
                                 break;
                             case BOTTOM:
                                 dist = Point2D.distance(
                                         agent.getX().doubleValue(),
                                         agent.getY().doubleValue(),
-                                        a.getX().doubleValue(),
-                                        a.getY().doubleValue() + L);
+                                        a.getX().doubleValue() + L,
+                                        a.getY().doubleValue());
                                 break;
                             case UPPER:
                                 dist = Point2D.distance(
                                         agent.getX().doubleValue(),
                                         agent.getY().doubleValue(),
-                                        a.getX().doubleValue(),
-                                        a.getY().doubleValue() - L);
+                                        a.getX().doubleValue() - L,
+                                        a.getY().doubleValue());
                                 break;
                             case UPPER_RIGHT:
                                 dist = Point2D.distance(
                                         agent.getX().doubleValue(),
                                         agent.getY().doubleValue(),
-                                        a.getX().doubleValue() + L,
-                                        a.getY().doubleValue() - L);
+                                        a.getX().doubleValue() - L,
+                                        a.getY().doubleValue() + L);
                                 break;
                             case BOTTOM_RIGHT:
                                 dist = Point2D.distance(
@@ -255,13 +266,20 @@ public class Universe {
                                         a.getY().doubleValue() + L);
                                 break;
                         }
-                        if (dist < RC) {
+                        if (dist - agent.getRadius() - a.getRadius() <= RC) {
                             auxList.add(a.getId());
-                            relationHashMap.put(agent.getId() + a.getId(), new Pair<>(agent, a));
+                            relationHashMap.put(agent.getId() + " " + a.getId(), new Pair<>(agent, a));
+                            List<String> neighbourList = particleWithNeighbours.get(a.getId());
+                            if(neighbourList == null){
+                                neighbourList = new ArrayList<>();
+                            }
+                            neighbourList.add(agent.getId());
+                            particleWithNeighbours.put(a.getId(), neighbourList);
                         }
                     }
                 }
             }
+
             if(!auxList.isEmpty())
                 particleWithNeighbours.put(agent.getId(), auxList);
         }
