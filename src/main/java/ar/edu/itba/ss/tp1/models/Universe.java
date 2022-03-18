@@ -204,8 +204,8 @@ public class Universe {
         endTime = System.currentTimeMillis();
         OutputParser op = new OutputParser();
 
-        //op.buildOutput(particleWithNeighbours, "output", endTime-startTime);
-        op.buildOutput2(particleWithNeighbours, "output", endTime-startTime, N, "66", agents);
+        op.buildOutput(particleWithNeighbours, "output", endTime-startTime);
+        //op.buildOutput2(particleWithNeighbours, "output", endTime-startTime, N, "66", agents);
     }
 
     private enum PeriodicType {

@@ -3,12 +3,10 @@ package ar.edu.itba.ss.tp1.parsers;
 import ar.edu.itba.ss.tp1.models.Agent;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class OutputParser {
 
@@ -18,38 +16,26 @@ public class OutputParser {
     public boolean buildOutput (Map<String, List<String>> neighbours, String fileName, Long eTime) {
         try {
             File myObj = new File(fileName + ".csv");
-            if (myObj.createNewFile()) {
-                System.out.println("File created: " + myObj.getName());
-                try {
-                    FileWriter myWriter = new FileWriter(fileName + ".csv");
-                    //myWriter.write("Files in Java might be tricky, but it is fun enough!");
-                    //myWriter.write(eTime.toString()+"\n");
-                    for (String k: neighbours.keySet()) {
-                        String dump = "";
-                        int i = 0;
-                        for(String id : neighbours.get(k)) {
-                            if (i == 0){
-                                i++;
-                                dump += id;
-                            } else {
-                                dump += "    " + id;
-                            }
-                        }
-                        myWriter.write("[" + k + "    " + dump + "]\n");
-                    }
-                    //myWriter.write(("---------\n"));
-                    //myWriter.write(eTime.toString()+";\n");
-                    myWriter.close();
-                    System.out.println("Successfully wrote to the file.");
-                    return true;
-                } catch (IOException e) {
-                    System.out.println("An error occurred.");
-                    e.printStackTrace();
+            if(!myObj.exists()) {
+                if (myObj.createNewFile()) {
+                    System.out.println("File created: " + myObj.getName());
+                    return printToFile(neighbours, fileName);
+                } else {
+                    System.out.println("File already exists.");
                     return false;
                 }
             } else {
-                System.out.println("File already exists.");
-                return false;
+                try {
+                    Scanner sc = new Scanner(myObj);
+                    while(sc.hasNextLine()) {
+                        String data = sc.nextLine();
+                    }
+                    return printToFile(neighbours, fileName);
+                } catch (FileNotFoundException e) {
+                    System.out.println("I couldn't find the file;");
+                    e.printStackTrace();
+                    return false;
+                }
             }
         } catch(IOException e) {
             System.out.println("No pude crear el archivo.");
@@ -93,6 +79,33 @@ public class OutputParser {
         } catch(IOException e) {
             System.out.println("No pude crear el archivo.");
             e.printStackTrace();
+        }
+    }
+
+    private boolean printToFile(Map<String, List<String>> neighbours, String fileName){
+        try {
+            FileWriter myWriter = new FileWriter(fileName + ".csv");
+            myWriter.write("<------------------------>\n");
+            for (String k : neighbours.keySet()) {
+                String dump = "";
+                int i = 0;
+                for (String id : neighbours.get(k)) {
+                    if (i == 0) {
+                        i++;
+                        dump += id;
+                    } else {
+                        dump += "    " + id;
+                    }
+                }
+                myWriter.write("[" + k + "    " + dump + "]\n");
+            }
+            myWriter.close();
+            System.out.println("Successfully wrote to the file.");
+            return true;
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+            return false;
         }
     }
 
