@@ -29,18 +29,21 @@ public class CellIndexMethod {
     }
 
     public static void staticRun() {
+        // PARA CORRER RANDOM
+//        Set<Agent> randomAgents = Universe.generateRandomAgents(N, L, RADIUS);
+
+        // PARA CORRER DESDE ARCHIVOS
         List<Pair<Double,Double>> staticInfo = StaticParser.staticParsing("src/main/resources/Static100");
         List<Pair<Double,Double>> dynamicInfo = DynamicParser.dynamicParsing("src/main/resources/Dynamic100");
-        Set<Agent> randomAgents = Universe.generateRandomAgents(N, L, RADIUS);
 
         long start = System.currentTimeMillis();
 
-        Universe randomUniverse = new Universe(randomAgents, N, M, L, PERIODIC, RC);
+//        Universe randomUniverse = new Universe(randomAgents, N, M, L, PERIODIC, RC);
 
         Universe universe = new Universe(staticInfo, dynamicInfo, M, PERIODIC, RC);
 
         //universe.printGrid();
-        randomUniverse.calculateDistances();
+        universe.calculateDistances();
         long end = System.currentTimeMillis();
         System.out.println("Execution Time: " + (end - start) + "ms");
         /*for(String id: universe.getParticleWithNeighbours().keySet()){
@@ -53,26 +56,14 @@ public class CellIndexMethod {
     }
 
     public void run() {
-        List<Pair<Double,Double>> staticInfo = StaticParser.staticParsing("src/main/resources/Static100");
-        List<Pair<Double,Double>> dynamicInfo = DynamicParser.dynamicParsing("src/main/resources/Dynamic100");
         Set<Agent> randomAgents = Universe.generateRandomAgents(N, L, RADIUS);
 
         long start = System.currentTimeMillis();
 
         Universe randomUniverse = new Universe(randomAgents, N, M, L, PERIODIC, RC);
 
-        Universe universe = new Universe(staticInfo, dynamicInfo, M, PERIODIC, RC);
-
-        //universe.printGrid();
         randomUniverse.calculateDistances();
         long end = System.currentTimeMillis();
         System.out.println("Execution Time: " + (end - start) + "ms");
-        /*for(String id: universe.getParticleWithNeighbours().keySet()){
-            System.out.print(id + ":");
-            for (String neighboursIds : universe.getParticleWithNeighbours().get(id)){
-                System.out.print("\t" + neighboursIds);
-            }
-            System.out.println("\n");
-        }*/
     }
 }
