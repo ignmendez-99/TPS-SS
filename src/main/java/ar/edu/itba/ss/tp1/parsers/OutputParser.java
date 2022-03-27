@@ -25,6 +25,9 @@ public class OutputParser {
                     return false;
                 }
             } else {
+                myObj.delete();
+                myObj = new File(fileName + ".csv");
+                myObj.createNewFile();
                 try {
                     Scanner sc = new Scanner(myObj);
                     while(sc.hasNextLine()) {

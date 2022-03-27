@@ -39,20 +39,6 @@ public class Universe {
         createGrid();
     }
 
-    // Constructor for when we have random agents
-    public Universe(Set<Agent> agents, Integer n, Integer m, Double l, Boolean periodic, Double rc) {
-        startTime = System.currentTimeMillis();
-        N = n;
-        L = l;
-        M = m;
-        RC = rc;
-        this.agents = agents;
-        this.periodic = periodic;
-        particleWithNeighbours = new HashMap<>();
-        relationHashMap = new HashMap<>();
-        createGrid();
-    }
-
     // Methods
     private Set<Agent> populate(List<Pair<Double, Double>> staticInfo, List<Pair<Double, Double>> dynamicInfo ){
         int overlaped = 0;
@@ -235,7 +221,7 @@ public class Universe {
                 if (!agent.getId().equals(a.getId())) {
                     if (relationHashMap.containsKey(relationId1) || relationHashMap.containsKey(relationId2)) {
                         // Ya sabemos que son vecinas, no hace falta calcular la distancia
-                        auxList.add(a.getId());
+                        //auxList.add(a.getId());
                     } else {
                         // calcular distancia entre agent y cada "a"
                         double dist = 0;
@@ -314,39 +300,7 @@ public class Universe {
         }
     }
 
-    public static Set<Agent> generateRandomAgents(Integer n, Double l, Double radius){
-        Random random = new Random();
-        Set<Agent> aux= new TreeSet<>(new Comparator<Agent>() {
-            @Override
-            public int compare(Agent o1, Agent o2) {
-                if(Objects.equals(o1.getX(), o2.getX()) && Objects.equals(o1.getY(), o2.getY())) {
-                    // Same position ==> same particle
-                    return 0;
-                }
-                double x1 = o1.getX().doubleValue();
-                double y1 = o1.getY().doubleValue();
-                double x2 = o2.getX().doubleValue();
-                double y2 = o2.getY().doubleValue();
-                if(Point2D.distance(x1, y1, x2, y2) - (o1.getRadius()+o2.getRadius()) < 0.0) {
-                    // If both particles intersect ==> same particle
-                    return 0;
-                }
-                return 1;
-            }
-        });
-        double x, y;
-        while(aux.size()!=n) {
-            x = random.nextDouble() * l;
-            y = random.nextDouble() * l;
-            Agent newAgent = new Agent(
-                    new BigDecimal(x),
-                    new BigDecimal(y),
-                    0.0,0.0,
-                    radius);
-            if (!aux.contains(newAgent)) {
-                aux.add(newAgent);
-            }
-        }
-        return aux;
+    public Map<String, List<String>> getParticleWithNeighbours(){
+        return particleWithNeighbours;
     }
 }
