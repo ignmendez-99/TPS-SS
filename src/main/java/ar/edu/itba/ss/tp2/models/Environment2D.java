@@ -38,14 +38,14 @@ public class Environment2D {
     }
 
     public Environment2D(List<Pair<Integer, Integer>> sInfo, Double endCondition) {
-        this.env = new int[sInfo.get(1).first][sInfo.get(1).second];
+        x = sInfo.get(1).first;
+        y = sInfo.get(1).second;
+        this.env = new int[x][y];
         if(sInfo.get(0).first == 0)
             neighbourType = NeighbourType.VON_NEUMANN;
         else
             neighbourType = NeighbourType.MOORE;
         r = sInfo.get(0).second;
-        x = sInfo.get(1).first;
-        y = sInfo.get(1).second;
         this.endCondition = endCondition;
         populate(sInfo);
     }
@@ -93,6 +93,7 @@ public class Environment2D {
     }
 
     //todo: hay q ver como terminarlo cuando esta estacionario
+    //todo: yo pense usando una variable booleana
     public boolean canEvolve() {
         double percentage = ((double) usedCells / (x*y))*100;
         return percentage < endCondition;
