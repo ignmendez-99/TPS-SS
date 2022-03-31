@@ -21,7 +21,6 @@ public class GameLife {
             Environment2D env = new Environment2D(staticInfo, endCondition);
             env.simulate();
         }
-
     }
 
 }
