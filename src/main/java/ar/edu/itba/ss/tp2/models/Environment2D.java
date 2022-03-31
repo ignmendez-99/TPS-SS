@@ -1,10 +1,11 @@
 package ar.edu.itba.ss.tp2.models;
 
 import ar.edu.itba.ss.tp1.models.Pair;
-
+import ar.edu.itba.ss.tp2.ShufflingUtils;
+import ar.edu.itba.ss.tp2.parsers.OutputParser;
 
 import java.util.List;
-import java.util.function.IntBinaryOperator;
+import java.util.Random;
 
 public class Environment2D {
 
@@ -12,7 +13,6 @@ public class Environment2D {
     private int [][] env;
     // Para casos random hay que indicar que ratio de particulas tienen chances
     // de estar vivas.
-    private final Double lifeExpectancy;
     private final Double endCondition;
     private final Integer x;
     private final Integer y;
@@ -29,14 +29,14 @@ public class Environment2D {
     // Constructor RANDOM
     public Environment2D(Integer x, Integer y, Double lifeExpectancy, Double endCondition) {
         this.env = new int[x][y];
-        // TODO: faltaria popular la matriz de manera random
-        neighbourType = NeighbourType.MOORE;
-        r = 2; // TODO: revisar este valor
         this.x = x;
         this.y = y;
-        this.lifeExpectancy = lifeExpectancy;
+        populateRandom(lifeExpectancy);
+        neighbourType = NeighbourType.MOORE;
+        r = 2; // TODO: revisar este valor, ya que debería estar más parametrizado que esto
         this.endCondition = endCondition;
     }
+
     public Environment2D(List<Pair<Integer, Integer>> sInfo, Double endCondition) {
         this.env = new int[sInfo.get(1).first][sInfo.get(1).second];
         if(sInfo.get(0).first == 0)
@@ -46,7 +46,6 @@ public class Environment2D {
         r = sInfo.get(0).second;
         x = sInfo.get(1).first;
         y = sInfo.get(1).second;
-        this.lifeExpectancy = -1.0;
         this.endCondition = endCondition;
         populate(sInfo);
     }
@@ -62,11 +61,27 @@ public class Environment2D {
         }
     }
 
+    /**
+     * Primero llena la matriz con la cantidad necesaria de 1, para luego hacer shuffle
+     */
+    private void populateRandom(Double lifeExpectancy) {
+        usedCells = 0;
+        int numberOfCellsToActivate = (int) ((x*y) * (lifeExpectancy/100.0));
+        for (int i = 0; i < numberOfCellsToActivate; i++) {
+            env[i/x][i%y] = 1;
+        }
+        ShufflingUtils.shuffle(env, y, new Random());
+        //printMatrix(env);
+    }
+
     public void simulate () {
 //        while( canEvolve() ) {
 //            evolve();
 //            // parseXYZ
 //        }
+
+        // Vuelco a archivo la matriz inicial
+        OutputParser.writeMatrixToFile(env, x, y);
         int i = 0;
         while( i < 4 ) {
             printMatrix(env);
@@ -99,14 +114,15 @@ public class Environment2D {
         }
         //if(env.equals(futureEnv)
         env = futureEnv;
+        OutputParser.writeMatrixToFile(env, x, y);
     }
 
     public void printMatrix(int [][] m){
-        for (int k = 0; k < 10; k++) {
-            for (int l = 0; l < 10; l++) {
+        for (int k = 0; k < x; k++) {
+            for (int l = 0; l < y; l++) {
                 System.out.print(((m[k][l] == 0) ? "." : "*") + " ");
             }
-            System.out.println("");
+            System.out.println();
         }
     }
 

@@ -90,14 +90,14 @@ public class OutputParser {
             FileWriter myWriter = new FileWriter(fileName + ".csv");
             myWriter.write("<------------------------>\n");
             for (String k : neighbours.keySet()) {
-                String dump = "";
+                StringBuilder dump = new StringBuilder();
                 int i = 0;
                 for (String id : neighbours.get(k)) {
                     if (i == 0) {
                         i++;
-                        dump += id;
+                        dump.append(id);
                     } else {
-                        dump += "    " + id;
+                        dump.append("    ").append(id);
                     }
                 }
                 myWriter.write("[" + k + "    " + dump + "]\n");
