@@ -65,12 +65,12 @@ public class Environment2D {
      * Primero llena la matriz con la cantidad necesaria de 1, para luego hacer shuffle
      */
     private void populateRandom(Double lifeExpectancy) {
-        usedCells = 0;
         int numberOfCellsToActivate = (int) ((x*y) * (lifeExpectancy/100.0));
         for (int i = 0; i < numberOfCellsToActivate; i++) {
             env[i/x][i%y] = 1;
         }
-        ShufflingUtils.shuffle(env, y, new Random());
+        ShufflingUtils.shuffle2D(env, y, new Random());
+        usedCells = numberOfCellsToActivate;
         //printMatrix(env);
     }
 
@@ -80,13 +80,19 @@ public class Environment2D {
 //            // parseXYZ
 //        }
 
+        // El algoritmo empieza acá
+        long startTime = System.currentTimeMillis();
+
         // Vuelco a archivo la matriz inicial
-        OutputParser.writeMatrixToFile(env, x, y);
+        OutputParser.createCleanFile();
+        OutputParser.writeMatrix2DToFile(env, x, y, 0);
+
         int i = 0;
-        while( i < 4 ) {
+        while( i < 20 ) {
             printMatrix(env);
             evolve();
             i++;
+            OutputParser.writeMatrix2DToFile(env, x, y, System.currentTimeMillis() - startTime);
             System.out.println("-----------------------------");
             // parseXYZ
         }
@@ -105,7 +111,6 @@ public class Environment2D {
         int [][] futureEnv = new int[x][y];
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
-                // Reglas de la bibliografía
                 if(neighbourType == NeighbourType.VON_NEUMANN){
                     futureEnv[i][j] = VonNeumann(i, j);
                 } else if(neighbourType == NeighbourType.MOORE){
@@ -115,7 +120,6 @@ public class Environment2D {
         }
         //if(env.equals(futureEnv)
         env = futureEnv;
-        OutputParser.writeMatrixToFile(env, x, y);
     }
 
     public void printMatrix(int [][] m){

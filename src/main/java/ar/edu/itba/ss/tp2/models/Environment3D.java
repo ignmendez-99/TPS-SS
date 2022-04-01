@@ -1,9 +1,11 @@
 package ar.edu.itba.ss.tp2.models;
 
 import ar.edu.itba.ss.tp1.models.Pair;
+import ar.edu.itba.ss.tp2.ShufflingUtils;
 import ar.edu.itba.ss.tp2.parsers.OutputParser;
 
 import java.util.List;
+import java.util.Random;
 
 public class Environment3D {
     private int [][][] env;
@@ -27,7 +29,7 @@ public class Environment3D {
         this.x = x;
         this.y = y;
         this.z = z;
-        //populateRandom(lifeExpectancy);
+        populateRandom(lifeExpectancy);
         neighbourType = NeighbourType.MOORE;
         r = 2; // TODO: revisar este valor, ya que debería estar más parametrizado que esto
         this.endCondition = endCondition;
@@ -63,13 +65,28 @@ public class Environment3D {
         }
     }
 
-    public void printMatrix(int [][] m){
-        for (int k = 0; k < x; k++) {
-            for (int l = 0; l < y; l++) {
-                System.out.print(((m[k][l] == 0) ? "." : "*") + " ");
+    /**
+     * Primero llena la matriz con la cantidad necesaria de 1, para luego hacer shuffle
+     */
+    private void populateRandom(Double lifeExpectancy) {
+        boolean breakCycle = false;
+        usedCells = 0;
+        int numberOfCellsToActivate = (int) ((x*y*z) * (lifeExpectancy/100.0));
+        for (int i = 0; i < x; i++) {
+            int[][] auxEnv = new int[y][z];
+            for (int j = 0; j < y*z; j++) {
+                auxEnv[j/y][j%z] = 1;
+                usedCells++;
+                if (usedCells == numberOfCellsToActivate) {
+                    breakCycle = true;
+                    break;
+                }
             }
-            System.out.println();
+            env[i] = auxEnv;
+            if(breakCycle)
+                break;
         }
+        ShufflingUtils.shuffle3D(env, x, y, z);
     }
 
     public void simulate () {
@@ -78,19 +95,20 @@ public class Environment3D {
 //            // parseXYZ
 //        }
 
+        // El algoritmo empieza acá
+        long startTime = System.currentTimeMillis();
+
         // Vuelco a archivo la matriz inicial
-        //OutputParser.writeMatrixToFile(env, x, y);
+        OutputParser.createCleanFile();
+        OutputParser.writeMatrix3DToFile(env, x, y, z, 0);
+
         int i = 0;
-        evolve();
-        /*while( i < 4 ) {
-            //printMatrix(env);
+        while( i < 20 ) {
             evolve();
             i++;
+            OutputParser.writeMatrix3DToFile(env, x, y, z, System.currentTimeMillis() - startTime);
             System.out.println("-----------------------------");
-            // parseXYZ
         }
-
-         */
     }
 
     public void evolve () {
@@ -186,13 +204,16 @@ public class Environment3D {
     }
 
     public int checkRules(int cx, int cy, int cz, int aliveCells){
-        if(env[cx][cy][cz] == 0 && aliveCells == 3){
-            usedCells++;
-            return 1;
+        if(env[cx][cy][cz] == 1 && aliveCells < 10){
+            usedCells--;
+            return 0;
         }
-        if(env[cx][cy][cz] == 1 && (aliveCells == 2 || aliveCells == 3)){
+        if(aliveCells >= 10 && aliveCells <= 20){
             usedCells++;
             return 1;
+        } else if(env[cx][cy][cz] == 1 && aliveCells > 20){
+            usedCells--;
+            return 0;
         } else {
             return 0;
         }

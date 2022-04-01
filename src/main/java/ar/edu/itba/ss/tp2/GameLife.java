@@ -11,26 +11,29 @@ import java.util.List;
 
 public class GameLife {
 
-    private static final Boolean _3D = true;
-    public static final Boolean RANDOM = false;
+    private static final Boolean _3D = false;
+    public static final Boolean RANDOM = true;
 
     private static final Integer M = 10;
     private static final Double lifeExpectancy = 30.0;
     private static final Double endCondition = 50.0;
 
-    private static final String OUTPUT_FILE = "outputTP2.xyz";
+    private static final String OUTPUT_FILE_3D = "outputTP2_3D.xyz";
+    private static final String OUTPUT_FILE_2D = "outputTP2_2D.xyz";
 
     public static void main(String[] args) {
-        OutputParser.setFileName(OUTPUT_FILE);
         if(_3D) {
+            OutputParser.setFileName(OUTPUT_FILE_3D);
             if (RANDOM) {
-                //falta
+                Environment3D env = new Environment3D(5, 5, 5, lifeExpectancy, endCondition);
+                env.simulate();
             } else {
                 List<Pair<Integer, Pair<Integer, Integer>>> staticInfo3D = EnvironmentParser3D.staticParsing("src/main/resources/environment3D");
                 Environment3D env3D = new Environment3D(staticInfo3D, endCondition);
                 env3D.simulate();
             }
         } else {
+            OutputParser.setFileName(OUTPUT_FILE_2D);
             if(RANDOM) {
                 Environment2D env = new Environment2D(10, 10, lifeExpectancy, endCondition);
                 env.simulate();
