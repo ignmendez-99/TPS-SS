@@ -14,8 +14,8 @@ public class CellIndexMethod {
     private static final Boolean PERIODIC = false;
 
     public static void main(String[] args) {
-        List<Pair<Double,Double>> staticInfo = StaticParser.staticParsing("src/main/resources/Static100");
-        List<Pair<Double,Double>> dynamicInfo = DynamicParser.dynamicParsing("src/main/resources/Dynamic100");
+        List<Pair<Double,Double>> staticInfo = StaticParser.staticParsing("src/main/resources/tp1/Static100");
+        List<Pair<Double,Double>> dynamicInfo = DynamicParser.dynamicParsing("src/main/resources/tp1/Dynamic100");
 
         final Integer M = calculateOptimumM(staticInfo);
         System.out.println(M);

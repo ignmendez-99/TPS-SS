@@ -20,8 +20,8 @@ public class InputFileCreator {
     private static final int M_2D = 1000;
     private static final int M_3D = 100;
 
-    private static final String fileName2D = "src/main/resources/environment2D";
-    private static final String fileName3D = "src/main/resources/environment3D";
+    private static final String fileName2D = "src/main/resources/tp2/environment2D";
+    private static final String fileName3D = "src/main/resources/tp2/environment3D";
 
     public static void main(String[] args) {
         if(_3D) {

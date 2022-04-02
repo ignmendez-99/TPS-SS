@@ -2,7 +2,6 @@ package ar.edu.itba.ss.tp2.models;
 
 import ar.edu.itba.ss.tp1.models.Pair;
 import ar.edu.itba.ss.tp2.AliveDeadRules;
-import ar.edu.itba.ss.tp2.ShufflingUtils;
 import ar.edu.itba.ss.tp2.parsers.OutputParser;
 
 import java.util.List;
