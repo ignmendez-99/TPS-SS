@@ -13,7 +13,6 @@ public class Environment2D {
     private int [][] env;
     // Para casos random hay que indicar que ratio de particulas tienen chances
     // de estar vivas.
-    private final Double endCondition;
     private final Integer x;
     private final Integer y;
     private Integer usedCells;
@@ -22,9 +21,10 @@ public class Environment2D {
     private final int r;
 
     private boolean reachedBorder = false;
+    private final int center;
 
 
-    public Environment2D(List<Pair<Integer, Integer>> sInfo, Double endCondition) {
+    public Environment2D(List<Pair<Integer, Integer>> sInfo) {
         x = sInfo.get(1).first;
         y = sInfo.get(1).second;
         this.env = new int[x][y];
@@ -33,8 +33,8 @@ public class Environment2D {
         else
             neighbourType = NeighbourType.MOORE;
         r = sInfo.get(0).second;
-        this.endCondition = endCondition;
         populate(sInfo);
+        center = x/2;
     }
 
     // Methods
@@ -54,7 +54,7 @@ public class Environment2D {
 
         // Vuelco a archivo la matriz inicial
         OutputParser.createCleanFile();
-        OutputParser.writeMatrix2DToFile(env, x, y, 0, usedCells);
+        OutputParser.writeMatrix2DToFile(env, x, y, 0, usedCells, center);
 
         int i = 0;
         while( i < iterations && !reachedBorder ) {
@@ -65,7 +65,7 @@ public class Environment2D {
             evolve();
             i++;
             if(usedCells > 0)
-                OutputParser.writeMatrix2DToFile(env, x, y, System.currentTimeMillis() - startTime, usedCells);
+                OutputParser.writeMatrix2DToFile(env, x, y, System.currentTimeMillis() - startTime, usedCells, center);
             System.out.println("Finished iteration " + i);
             if(reachedBorder) {
                 System.out.println("System reached border in iteration " + i);

@@ -10,7 +10,6 @@ import java.util.Random;
 
 public class Environment3D {
     private int [][][] env;
-    private final Double endCondition;
     private final Integer x;
     private final Integer y;
     private final Integer z;
@@ -20,9 +19,10 @@ public class Environment3D {
 
     private final NeighbourType neighbourType;
     private final int r;
+    private final int center;
 
 
-    public Environment3D(List<Pair<Integer, Pair<Integer, Integer>>> sInfo, Double endCondition) {
+    public Environment3D(List<Pair<Integer, Pair<Integer, Integer>>> sInfo) {
         x = sInfo.get(1).first;
         y = sInfo.get(1).second.first;
         z = sInfo.get(1).second.second;
@@ -32,8 +32,8 @@ public class Environment3D {
         else
             neighbourType = NeighbourType.MOORE;
         r = sInfo.get(0).second.first;
-        this.endCondition = endCondition;
         populate(sInfo);
+        center = x/2;
     }
 
     private void populate(List<Pair<Integer, Pair<Integer, Integer>>> sInfo) {
@@ -53,7 +53,7 @@ public class Environment3D {
 
         // Vuelco a archivo la matriz inicial
         OutputParser.createCleanFile();
-        OutputParser.writeMatrix3DToFile(env, x, y, z, 0, usedCells);
+        OutputParser.writeMatrix3DToFile(env, x, y, z, 0, usedCells, center);
 
         int i = 0;
         while( i < iterations && !reachedBorder ) {
@@ -64,7 +64,7 @@ public class Environment3D {
             evolve();
             i++;
             if(usedCells > 0)
-                OutputParser.writeMatrix3DToFile(env, x, y, z, System.currentTimeMillis() - startTime, usedCells);
+                OutputParser.writeMatrix3DToFile(env, x, y, z, System.currentTimeMillis() - startTime, usedCells, center);
             System.out.println("Finished iteration " + i);
             if(reachedBorder) {
                 System.out.println("System reached border in iteration " + i);

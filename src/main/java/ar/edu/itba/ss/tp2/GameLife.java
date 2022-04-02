@@ -17,18 +17,18 @@ public class GameLife {
     private static final String OUTPUT_FILE_3D = "outputTP2_3D.xyz";
     private static final String OUTPUT_FILE_2D = "outputTP2_2D.xyz";
 
-    private static final int iterations = 20;
+    private static final int iterations = 100;
 
     public static void main(String[] args) {
         if(_3D) {
             OutputParser.setFileName(OUTPUT_FILE_3D);
             List<Pair<Integer, Pair<Integer, Integer>>> staticInfo3D = EnvironmentParser3D.staticParsing("src/main/resources/environment3D");
-            Environment3D env3D = new Environment3D(staticInfo3D, endCondition);
+            Environment3D env3D = new Environment3D(staticInfo3D);
             env3D.simulate(iterations);
         } else {
             OutputParser.setFileName(OUTPUT_FILE_2D);
             List<Pair<Integer, Integer>> staticInfo = EnvironmentParser2D.staticParsing("src/main/resources/environment2D");
-            Environment2D env = new Environment2D(staticInfo, endCondition);
+            Environment2D env = new Environment2D(staticInfo);
             env.simulate(iterations);
         }
     }
