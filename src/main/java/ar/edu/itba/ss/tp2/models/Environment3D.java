@@ -1,6 +1,7 @@
 package ar.edu.itba.ss.tp2.models;
 
 import ar.edu.itba.ss.tp1.models.Pair;
+import ar.edu.itba.ss.tp2.AliveDeadRules;
 import ar.edu.itba.ss.tp2.ShufflingUtils;
 import ar.edu.itba.ss.tp2.parsers.OutputParser;
 
@@ -15,25 +16,11 @@ public class Environment3D {
     private final Integer z;
     private Integer usedCells;
 
+    private boolean reachedBorder = false;
+
     private final NeighbourType neighbourType;
     private final int r;
 
-    enum NeighbourType {
-        VON_NEUMANN(),
-        MOORE()
-    }
-
-    // Constructor RANDOM
-    public Environment3D(Integer x, Integer y, Integer z, Double lifeExpectancy, Double endCondition) {
-        this.env = new int[x][y][z];
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        populateRandom(lifeExpectancy);
-        neighbourType = NeighbourType.MOORE;
-        r = 2; // TODO: revisar este valor, ya que debería estar más parametrizado que esto
-        this.endCondition = endCondition;
-    }
 
     public Environment3D(List<Pair<Integer, Pair<Integer, Integer>>> sInfo, Double endCondition) {
         x = sInfo.get(1).first;
@@ -45,11 +32,6 @@ public class Environment3D {
         else
             neighbourType = NeighbourType.MOORE;
         r = sInfo.get(0).second.first;
-        System.out.println("x = " + x);
-        System.out.println("y = " + y);
-        System.out.println("z = " + z);
-        System.out.println("r = " + r);
-        System.out.println("Moo o Van = " + neighbourType);
         this.endCondition = endCondition;
         populate(sInfo);
     }
@@ -65,49 +47,28 @@ public class Environment3D {
         }
     }
 
-    /**
-     * Primero llena la matriz con la cantidad necesaria de 1, para luego hacer shuffle
-     */
-    private void populateRandom(Double lifeExpectancy) {
-        boolean breakCycle = false;
-        usedCells = 0;
-        int numberOfCellsToActivate = (int) ((x*y*z) * (lifeExpectancy/100.0));
-        for (int i = 0; i < x; i++) {
-            int[][] auxEnv = new int[y][z];
-            for (int j = 0; j < y*z; j++) {
-                auxEnv[j/y][j%z] = 1;
-                usedCells++;
-                if (usedCells == numberOfCellsToActivate) {
-                    breakCycle = true;
-                    break;
-                }
-            }
-            env[i] = auxEnv;
-            if(breakCycle)
-                break;
-        }
-        ShufflingUtils.shuffle3D(env, x, y, z);
-    }
-
-    public void simulate () {
-//        while( canEvolve() ) {
-//            evolve();
-//            // parseXYZ
-//        }
-
+    public void simulate (int iterations) {
         // El algoritmo empieza acá
         long startTime = System.currentTimeMillis();
 
         // Vuelco a archivo la matriz inicial
         OutputParser.createCleanFile();
-        OutputParser.writeMatrix3DToFile(env, x, y, z, 0);
+        OutputParser.writeMatrix3DToFile(env, x, y, z, 0, usedCells);
 
         int i = 0;
-        while( i < 20 ) {
+        while( i < iterations && !reachedBorder ) {
+            if(usedCells <= 0) {
+                System.out.println("All particles are dead in iteration " + i);
+                break;
+            }
             evolve();
             i++;
-            OutputParser.writeMatrix3DToFile(env, x, y, z, System.currentTimeMillis() - startTime);
-            System.out.println("-----------------------------");
+            if(usedCells > 0)
+                OutputParser.writeMatrix3DToFile(env, x, y, z, System.currentTimeMillis() - startTime, usedCells);
+            System.out.println("Finished iteration " + i);
+            if(reachedBorder) {
+                System.out.println("System reached border in iteration " + i);
+            }
         }
     }
 
@@ -118,7 +79,6 @@ public class Environment3D {
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
                 for (int k = 0; k < z; k++) {
-                    // Reglas de la bibliografía
                     if (neighbourType == NeighbourType.VON_NEUMANN) {
                         futureEnv[i][j][k] = VonNeumann(i, j, k);
                     } else if (neighbourType == NeighbourType.MOORE) {
@@ -128,7 +88,6 @@ public class Environment3D {
             }
         }
         env = futureEnv;
-        //OutputParser.writeMatrixToFile(env, x, y);
     }
 
     public int VonNeumann(int cx, int cy, int cz) {
@@ -145,7 +104,14 @@ public class Environment3D {
                 aux++;
             }
         }
-        return checkRules(cx, cy, cz, aliveCells);
+        int deadOrAlive = AliveDeadRules.checkRules3D(env[cx][cy][cz], aliveCells);
+        if(deadOrAlive == 1) {
+            if(cx == 0 || cx == x-1 || cy == 0 || cy == y-1 || cz == 0 || cz == z-1){
+                reachedBorder = true;
+            }
+            usedCells++;
+        }
+        return deadOrAlive;
     }
 
     public int layerAnalizer(int cy, int cz, int rp, int cx) {
@@ -169,11 +135,6 @@ public class Environment3D {
                 aux++;
             }
         }
-        //System.out.println("Estamos en la particula => " + cx + " " + cy + " " + cz);
-        //System.out.println("cx:" + cx);
-        //printMatrix(auxm[cx]);
-        //if(aliveCells != 0)
-        //    System.out.println("alive cells = " + aliveCells + " for cell: " + cx + "-" + cy);
         return aliveCells;
     }
 
@@ -197,25 +158,14 @@ public class Environment3D {
                 }
             }
         }
-        if(aliveCells != 0)
-            System.out.println("Alive cells = " + aliveCells + " ==> cell: " + cx + "-" + cy + "-" + cz);
-        //hasta aca tenemos la cantidad de alivecells ahora habria que chequear reglas.
-        return checkRules(cx, cy, cz, aliveCells);
-    }
 
-    public int checkRules(int cx, int cy, int cz, int aliveCells){
-        if(env[cx][cy][cz] == 1 && aliveCells < 10){
-            usedCells--;
-            return 0;
-        }
-        if(aliveCells >= 10 && aliveCells <= 20){
+        int deadOrAlive = AliveDeadRules.checkRules3D(env[cx][cy][cz], aliveCells);
+        if(deadOrAlive == 1) {
+            if(cx == 0 || cx == x-1 || cy == 0 || cy == y-1 || cz == 0 || cz == z-1){
+                reachedBorder = true;
+            }
             usedCells++;
-            return 1;
-        } else if(env[cx][cy][cz] == 1 && aliveCells > 20){
-            usedCells--;
-            return 0;
-        } else {
-            return 0;
         }
+        return deadOrAlive;
     }
 }

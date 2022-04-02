@@ -1,11 +1,11 @@
 package ar.edu.itba.ss.tp2.models;
 
 import ar.edu.itba.ss.tp1.models.Pair;
+import ar.edu.itba.ss.tp2.AliveDeadRules;
 import ar.edu.itba.ss.tp2.ShufflingUtils;
 import ar.edu.itba.ss.tp2.parsers.OutputParser;
 
 import java.util.List;
-import java.util.Random;
 
 public class Environment2D {
 
@@ -21,21 +21,8 @@ public class Environment2D {
     private final NeighbourType neighbourType;
     private final int r;
 
-    enum NeighbourType {
-        VON_NEUMANN(),
-        MOORE()
-    }
+    private boolean reachedBorder = false;
 
-    // Constructor RANDOM
-    public Environment2D(Integer x, Integer y, Double lifeExpectancy, Double endCondition) {
-        this.env = new int[x][y];
-        this.x = x;
-        this.y = y;
-        populateRandom(lifeExpectancy);
-        neighbourType = NeighbourType.MOORE;
-        r = 2; // TODO: revisar este valor, ya que debería estar más parametrizado que esto
-        this.endCondition = endCondition;
-    }
 
     public Environment2D(List<Pair<Integer, Integer>> sInfo, Double endCondition) {
         x = sInfo.get(1).first;
@@ -61,48 +48,29 @@ public class Environment2D {
         }
     }
 
-    /**
-     * Primero llena la matriz con la cantidad necesaria de 1, para luego hacer shuffle
-     */
-    private void populateRandom(Double lifeExpectancy) {
-        int numberOfCellsToActivate = (int) ((x*y) * (lifeExpectancy/100.0));
-        for (int i = 0; i < numberOfCellsToActivate; i++) {
-            env[i/x][i%y] = 1;
-        }
-        ShufflingUtils.shuffle2D(env, y, new Random());
-        usedCells = numberOfCellsToActivate;
-        //printMatrix(env);
-    }
-
-    public void simulate () {
-//        while( canEvolve() ) {
-//            evolve();
-//            // parseXYZ
-//        }
-
+    public void simulate (int iterations) {
         // El algoritmo empieza acá
         long startTime = System.currentTimeMillis();
 
         // Vuelco a archivo la matriz inicial
         OutputParser.createCleanFile();
-        OutputParser.writeMatrix2DToFile(env, x, y, 0);
+        OutputParser.writeMatrix2DToFile(env, x, y, 0, usedCells);
 
         int i = 0;
-        while( i < 20 ) {
-            printMatrix(env);
+        while( i < iterations && !reachedBorder ) {
+            if(usedCells <= 0) {
+                System.out.println("All particles are dead after iteration " + i);
+                break;
+            }
             evolve();
             i++;
-            OutputParser.writeMatrix2DToFile(env, x, y, System.currentTimeMillis() - startTime);
-            System.out.println("-----------------------------");
-            // parseXYZ
+            if(usedCells > 0)
+                OutputParser.writeMatrix2DToFile(env, x, y, System.currentTimeMillis() - startTime, usedCells);
+            System.out.println("Finished iteration " + i);
+            if(reachedBorder) {
+                System.out.println("System reached border in iteration " + i);
+            }
         }
-    }
-
-    //todo: hay q ver como terminarlo cuando esta estacionario
-    //todo: yo pense usando una variable booleana
-    public boolean canEvolve() {
-        double percentage = ((double) usedCells / (x*y))*100;
-        return percentage < endCondition;
     }
 
     public void evolve () {
@@ -118,7 +86,6 @@ public class Environment2D {
                 }
             }
         }
-        //if(env.equals(futureEnv)
         env = futureEnv;
     }
 
@@ -151,9 +118,14 @@ public class Environment2D {
                 aux++;
             }
         }
-        if(aliveCells != 0)
-            System.out.println("alive cells = " + aliveCells + " for cell: " + cx + "-" + cy);
-        return checkRules(cx, cy, aliveCells);
+        int deadOrAlive = AliveDeadRules.checkRules2D(env[cx][cy], aliveCells);
+        if(deadOrAlive == 1) {
+            if(cx == 0 || cx == x-1 || cy == 0 || cy == y-1){
+                reachedBorder = true;
+            }
+            usedCells++;
+        }
+        return deadOrAlive;
     }
 
     public int Moore(int cx, int cy){
@@ -171,35 +143,14 @@ public class Environment2D {
                 }
             }
         }
-        if(aliveCells != 0)
-             System.out.println("alive cells = " + aliveCells + " for cell: " + cx + "-" + cy);
-        //hasta aca tenemos la cantidad de alivecells ahora habria que chequear reglas.
-        return checkRules(cx, cy, aliveCells);
-    }
-
-    public int checkRules(int cx, int cy, int aliveCells){
-        if(env[cx][cy] == 0 && aliveCells == 3){
+        int deadOrAlive = AliveDeadRules.checkRules2D(env[cx][cy], aliveCells);
+        if(deadOrAlive == 1) {
+            if(cx == 0 || cx == x-1 || cy == 0 || cy == y-1){
+                reachedBorder = true;
+            }
             usedCells++;
-            return 1;
         }
-        if(env[cx][cy] == 1 && (aliveCells == 2 || aliveCells == 3)){
-            usedCells++;
-            return 1;
-        } else {
-            return 0;
-        }
+        return deadOrAlive;
     }
-
-    // for i = 0 ... ==> recorro filas
-    //     for j = r - i ; j < 2 * r - j ... ==> recorro cols
-    // . . . . * . . . .
-    // . . . * * * . . .
-    // . . * * * * * . .
-    // . * * * * * * * .
-    // * * * * * * * * *
-    // . * * * * * * * .
-    // . . * * * * * . .
-    // . . . * * * . . .
-    // . . . . * . . . .
 
 }

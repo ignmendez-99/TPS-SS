@@ -1,30 +1,24 @@
 package ar.edu.itba.ss.tp2.parsers;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Scanner;
 
 public class OutputParser {
 
     private static String fileName;
 
-    public static void writeMatrix2DToFile(int[][] env, Integer x, Integer y, long eTime) {
+    public static void writeMatrix2DToFile(int[][] env, Integer x, Integer y, long eTime, int particlesToDraw) {
         try {
-            final int numberOfParticles = x * y;
-            StringBuilder dump = new StringBuilder("" + numberOfParticles + "\n" + "Time=" + eTime + "\n");
+            StringBuilder dump = new StringBuilder("" + particlesToDraw + "\n" + "Time=" + eTime + "\n");
             for (int i = 0; i < x; i++) {
                 for (int j = 0; j < y; j++) {
-                    if (env[i][j] == 1) {
-                        dump.append("Gr");
-                    } else {
-                        dump.append("Bl");
+                    if (env[i][j]== 1) {
+                        dump.append("Gr").append("        ").append(i).append("      ").append(j).append("      ").append("0      0.1\n");
                     }
-                    dump.append("        ").append(i).append("      ").append(j).append("      ").append("0      0.5\n");
                 }
             }
             appendToEndOfFile(dump.toString());
@@ -38,19 +32,15 @@ public class OutputParser {
         fileName = fn;
     }
 
-    public static void writeMatrix3DToFile(int[][][] env, Integer x, Integer y, Integer z, long eTime) {
+    public static void writeMatrix3DToFile(int[][][] env, Integer x, Integer y, Integer z, long eTime, int particlesToDraw) {
         try {
-            final int numberOfParticles = x * y * z;
-            StringBuilder dump = new StringBuilder("" + numberOfParticles + "\n" + "Time=" + eTime + "\n");
+            StringBuilder dump = new StringBuilder("" + particlesToDraw + "\n" + "Time=" + eTime + "\n");
             for (int i = 0; i < x; i++) {
                 for (int j = 0; j < y; j++) {
                     for (int k = 0; k < z; k++) {
                         if (env[i][j][k] == 1) {
-                            dump.append("Gr");
-                        } else {
-                            dump.append("Bl");
+                            dump.append("Gr").append("        ").append(i).append("      ").append(j).append("      ").append(k).append("      0.1\n");
                         }
-                        dump.append("        ").append(i).append("      ").append(j).append("      ").append(k).append("      0.1\n");
                     }
                 }
             }

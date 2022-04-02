@@ -4,45 +4,29 @@ import java.util.Random;
 
 public class ShufflingUtils {
 
-    /** Shuffles a 2D array with the same number of columns for each row. */
-    public static void shuffle2D(int[][] matrix, int columns, Random rnd) {
-        int size = matrix.length * columns;
-        for (int i = size; i > 1; i--)
-            swap(matrix, columns, i - 1, rnd.nextInt(i));
-    }
-
-    /**
-     * Swaps two entries in a 2D array, where i and j are 1-dimensional indexes, looking at the
-     * array from left to right and top to bottom.
-     */
-    public static void swap(int[][] matrix, int columns, int i, int j) {
-        int tmp = matrix[i / columns][i % columns];
-        matrix[i / columns][i % columns] = matrix[j / columns][j % columns];
-        matrix[j / columns][j % columns] = tmp;
-    }
-
-    /** Just some test code. */
-    public static void main(String[] args) {
-        int[][] matrix = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 }, { 10, 11, 12 } };
-        shuffle2D(matrix, 3, new Random());
-        for (int r = 0; r < matrix.length; r++) {
-            for (int c = 0; c < matrix[r].length; c++) {
-                System.out.print(matrix[r][c] + "\t");
-            }
-            System.out.println();
+    public static void shuffle2D(int[][] matrix, int fromX, int toX, int fromY, int toY) {
+        Random rnd = new Random();
+        for (int i = 0; i < (toX-fromX) * (toY-fromY) * 2; i++) {
+            int randomX = rnd.nextInt(toX - fromX) + fromX;
+            int randomY = rnd.nextInt(toY - fromY) + fromY;
+            int aux = matrix[randomX][randomY];
+            int randomX2 = rnd.nextInt(toX - fromX) + fromX;
+            int randomY2 = rnd.nextInt(toY - fromY) + fromY;
+            matrix[randomX][randomY] = matrix[randomX2][randomY2];
+            matrix[randomX2][randomY2] = aux;
         }
     }
 
-    public static void shuffle3D(int[][][] matrix, int x, int y, int z) {
+    public static void shuffle3D(int[][][] matrix, int fromX, int toX, int fromY, int toY, int fromZ, int toZ) {
         Random rnd = new Random();
-        for (int i = 0; i < x*y*z*2; i++) {
-            int randomX = rnd.nextInt(x);
-            int randomY = rnd.nextInt(y);
-            int randomZ = rnd.nextInt(z);
+        for (int i = 0; i < (toX-fromX) * (toY-fromY) * (toZ-fromZ) * 2; i++) {
+            int randomX = rnd.nextInt(toX - fromX) + fromX;
+            int randomY = rnd.nextInt(toY - fromY) + fromY;
+            int randomZ = rnd.nextInt(toZ - fromZ) + fromZ;
             int aux = matrix[randomX][randomY][randomZ];
-            int randomX2 = rnd.nextInt(x);
-            int randomY2 = rnd.nextInt(y);
-            int randomZ2 = rnd.nextInt(z);
+            int randomX2 = rnd.nextInt(toX - fromX) + fromX;
+            int randomY2 = rnd.nextInt(toY - fromY) + fromY;
+            int randomZ2 = rnd.nextInt(toZ - fromZ) + fromZ;
             matrix[randomX][randomY][randomZ] = matrix[randomX2][randomY2][randomZ2];
             matrix[randomX2][randomY2][randomZ2] = aux;
         }
