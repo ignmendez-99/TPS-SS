@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 public class OutputParser {
 
     private static String fileName;
+    private static boolean first = true;
 
     public static void writeMatrix2DToFile(int[][] env, Integer x, Integer y,
                                            long eTime, int particlesToDraw, int center) {
@@ -26,13 +27,35 @@ public class OutputParser {
                         double distance = p.distance(p2);
                         int rainbowPercentage = (int) (255 * Math.abs(distance / center));
                         dump.append(rainbowPercentage).append(" ");
-                        dump.append(i).append(" ").append(j).append(" ").append("0 0.1\n");
+                        dump.append(i).append(" ").append(j).append(" ").append("0 0.5\n");
                     }
                 }
             }
             appendToEndOfFile(dump.toString());
+            writeAux(particlesToDraw);
         } catch (IOException e) {
             System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
+
+    public static void writeAux(int n) throws IOException {
+        String pythonFilename = "outputForPython.csv";
+        FileWriter fw = new FileWriter(pythonFilename, true);
+        BufferedWriter bw = new BufferedWriter(fw);
+        if(first){
+            bw.write(String.valueOf(n));
+            first=false;
+        }else
+            bw.write("," + n);
+        bw.close();
+    }
+
+    public static void createCleanPythonFile(int n) {
+        Path fileToDeletePath = Paths.get("outputForPython.csv");
+        try {
+            Files.deleteIfExists(fileToDeletePath);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -60,6 +83,7 @@ public class OutputParser {
                 }
             }
             appendToEndOfFile(dump.toString());
+            writeAux(particlesToDraw);
         } catch (IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();

@@ -53,6 +53,7 @@ public class Environment2D {
 
         // Vuelco a archivo la matriz inicial
         OutputParser.createCleanFile();
+        OutputParser.createCleanPythonFile(usedCells);
         OutputParser.writeMatrix2DToFile(env, x, y, 0, usedCells, center);
 
         int i = 0;

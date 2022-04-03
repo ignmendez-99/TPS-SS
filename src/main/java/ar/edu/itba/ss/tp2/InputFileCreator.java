@@ -15,7 +15,7 @@ public class InputFileCreator {
     private static final Double lifeExpectancy = 50.0;
 
     private static final NeighbourType neighbourType = NeighbourType.MOORE;
-    private static final int r = 2;
+    private static final int r = 1;
 
     private static final int M_2D = 1000;
     private static final int M_3D = 100;

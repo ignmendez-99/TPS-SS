@@ -53,6 +53,7 @@ public class Environment3D {
 
         // Vuelco a archivo la matriz inicial
         OutputParser.createCleanFile();
+        OutputParser.createCleanPythonFile(usedCells);
         OutputParser.writeMatrix3DToFile(env, x, y, z, 0, usedCells, center);
 
         int i = 0;
