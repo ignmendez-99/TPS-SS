@@ -10,20 +10,18 @@ public class AliveDeadRules {
     // restrictivas 15-9 15-9 11k
     // medio 16-9 16-9 56k
     // poco 8-17 8-17 132k y muerio it 85
-
-    private final static int aliveUpperLimit_2D = 5;
-    private final static int aliveBottomLimit_2D = 3;
-    private final static int deadUpperLimit_2D = 5;
-    private final static int deadBottomLimit_2D = 3;
-
-    private final static int aliveUpperLimit_3D = 15;
-    private final static int aliveBottomLimit_3D = 9;
-    private final static int deadUpperLimit_3D = 15;
-    private final static int deadBottomLimit_3D = 9;
+    private final static int[] rules2D_1 = {3, 2, 3, 3}; //default
+    private final static int[] rules2D_2 = {6, 3, 6, 3}; //poco restrictiva
+    private final static int[] rules2D_3 = {4, 4, 4, 3}; //mata programas
+    
+    private final static int[] rules3D_1 = {3, 2, 3, 3}; //poco restrictiva se va a la mierda
+    private final static int[] rules3D_2 = {13, 5, 13, 12}; 
+    private final static int[] rules3D_3 = {19, 10, 18, 10}; //hace q mueran ni muy rapido ni muy lento
 
     public static int checkRules2D(int currentState, int aliveNeighbours) {
+        int[] rules = rules2D_2;
         if(currentState == 1) {
-            if(aliveNeighbours > aliveUpperLimit_2D || aliveNeighbours < aliveBottomLimit_2D) {
+            if(aliveNeighbours > rules[0] || aliveNeighbours < rules[1]) {
                 // Estoy vivo, pero me muero porque hay mucha gente o muy poca gente
                 return 0;
             } else {
@@ -31,7 +29,7 @@ public class AliveDeadRules {
                 return 1;
             }
         } else {
-            if(aliveNeighbours > deadUpperLimit_2D || aliveNeighbours < deadBottomLimit_2D) {
+            if(aliveNeighbours > rules[2] || aliveNeighbours < rules[3]) {
                 // Estoy muerto y me quedo muerto porque hay mucha gente o muy poca gente
                 return 0;
             } else {
@@ -42,8 +40,9 @@ public class AliveDeadRules {
     }
 
     public static int checkRules3D(int currentState, int aliveNeighbours) {
+        int[] rules = rules3D_1;
         if(currentState == 1) {
-            if(aliveNeighbours > aliveUpperLimit_3D || aliveNeighbours < aliveBottomLimit_3D) {
+            if(aliveNeighbours > rules[0] || aliveNeighbours < rules[1]) {
                 // Estoy vivo, pero me muero porque hay mucha gente o muy poca gente
                 return 0;
             } else {
@@ -51,7 +50,7 @@ public class AliveDeadRules {
                 return 1;
             }
         } else {
-            if(aliveNeighbours > deadUpperLimit_3D || aliveNeighbours < deadBottomLimit_3D) {
+            if(aliveNeighbours > rules[2] || aliveNeighbours < rules[3]) {
                 // Estoy muerto, pero revivo ya que hay mucha gente cerca mio, o muy poca gente cerca mio
                 return 0;
             } else {

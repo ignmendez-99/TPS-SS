@@ -59,18 +59,36 @@ public class Environment2D {
         int i = 0;
         while( i < iterations && !reachedBorder ) {
             if(usedCells <= 0) {
+                OutputParser.writeMatrix2DToFile(env, x, y, System.currentTimeMillis() - startTime, usedCells, center);
                 System.out.println("All particles are dead after iteration " + i);
                 break;
             }
             evolve();
             i++;
-            if(usedCells > 0)
+            if(usedCells > 0){
+                double radius = getPatternRadius(env, x,y);
+                OutputParser.writeAux(i,usedCells, radius);
                 OutputParser.writeMatrix2DToFile(env, x, y, System.currentTimeMillis() - startTime, usedCells, center);
+            }
             System.out.println("Finished iteration " + i);
             if(reachedBorder) {
                 System.out.println("System reached border in iteration " + i);
             }
         }
+    }
+
+    private static double getPatternRadius(int[][] env, int x, int y){
+        double max = 0;
+        for (int i = 0; i < x; i++) {
+            for (int j = 0; j < y; j++) {
+                if(env[i][j] == 1){
+                    double dist = Math.sqrt((Math.pow(i-500,2) + Math.pow(j-500,2)));
+                    if(dist > max)
+                        max = dist;
+                }
+            }
+        }
+        return max;
     }
 
     public void evolve () {

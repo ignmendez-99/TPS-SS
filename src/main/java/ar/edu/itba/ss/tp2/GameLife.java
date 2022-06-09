@@ -13,10 +13,10 @@ public class GameLife {
 
     private static final Boolean _3D = true;
 
-    private static final String OUTPUT_FILE_3D = "outputTP2_3D.xyz";
-    private static final String OUTPUT_FILE_2D = "outputTP2_2D.xyz";
+    private static final String OUTPUT_FILE_3D = "XYZ/outputTP2_3D.xyz";
+    private static final String OUTPUT_FILE_2D = "XYZ/outputTP2_2D.xyz";
 
-    private static final int iterations = 100;
+    private static final int iterations = 200;
 
     public static void main(String[] args) {
         if(_3D) {

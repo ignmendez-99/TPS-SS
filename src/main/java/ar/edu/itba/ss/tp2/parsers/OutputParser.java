@@ -18,7 +18,12 @@ public class OutputParser {
     public static void writeMatrix2DToFile(int[][] env, Integer x, Integer y,
                                            long eTime, int particlesToDraw, int center) {
         try {
+            particlesToDraw = particlesToDraw + 4;
             StringBuilder dump = new StringBuilder("" + particlesToDraw + "\n" + "Time=" + eTime + "\n");
+            dump.append("0 0 0 0 0.00001\n");
+            dump.append("0 1000 0 0 0.00001\n");
+            dump.append("0 0 1000 0 0.00001\n");
+            dump.append("0 1000 1000 0 0.00001\n");
             for (int i = 0; i < x; i++) {
                 for (int j = 0; j < y; j++) {
                     if (env[i][j]== 1) {
@@ -32,27 +37,34 @@ public class OutputParser {
                 }
             }
             appendToEndOfFile(dump.toString());
-            writeAux(particlesToDraw);
         } catch (IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
     }
 
-    public static void writeAux(int n) throws IOException {
-        String pythonFilename = "outputForPython.csv";
-        FileWriter fw = new FileWriter(pythonFilename, true);
-        BufferedWriter bw = new BufferedWriter(fw);
-        if(first){
-            bw.write(String.valueOf(n));
-            first=false;
-        }else
-            bw.write("," + n);
-        bw.close();
+    public static void writeAux(int it, int n, double radius) {
+        try{
+            String pythonFilename = "PythonFiles/outputForPython2.csv";
+            StringBuilder dump = new StringBuilder("");
+            if(first){
+                dump.append("I,N,R\n");
+                first = false;
+            }
+            dump.append(it).append(",").append(n).append(",").append(radius).append("\n");
+            FileWriter fw = new FileWriter(pythonFilename, true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(dump.toString());
+            bw.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
     }
 
     public static void createCleanPythonFile(int n) {
-        Path fileToDeletePath = Paths.get("outputForPython.csv");
+        Path fileToDeletePath = Paths.get("PythonFiles/outputForPython.csv");
+        first = true;
         try {
             Files.deleteIfExists(fileToDeletePath);
         } catch (IOException e) {
@@ -67,7 +79,16 @@ public class OutputParser {
     public static void writeMatrix3DToFile(int[][][] env, Integer x, Integer y, Integer z,
                                            long eTime, int particlesToDraw, int center) {
         try {
-            StringBuilder dump = new StringBuilder("" + particlesToDraw + "\n" + "Time=" + eTime + "\n");
+            int aux = particlesToDraw + 8;
+            StringBuilder dump = new StringBuilder("" + aux + "\n" + "Time=" + eTime + "\n");
+            dump.append("0 0 0 0 0.00001\n");
+            dump.append("0 0 0 100 0.00001\n");
+            dump.append("0 0 100 100 0.00001\n");
+            dump.append("0 100 100 100 0.00001\n");
+            dump.append("0 0 100 0 0.00001\n");
+            dump.append("0 100 100 0 0.00001\n");
+            dump.append("0 100 0 0 0.00001\n");
+            dump.append("0 100 0 100 0.00001\n");
             for (int i = 0; i < x; i++) {
                 for (int j = 0; j < y; j++) {
                     for (int k = 0; k < z; k++) {
@@ -83,7 +104,6 @@ public class OutputParser {
                 }
             }
             appendToEndOfFile(dump.toString());
-            writeAux(particlesToDraw);
         } catch (IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();

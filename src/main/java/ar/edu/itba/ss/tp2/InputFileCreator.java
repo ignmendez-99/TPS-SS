@@ -12,7 +12,7 @@ import java.nio.file.Paths;
 public class InputFileCreator {
 
     private static final Boolean _3D = true;
-    private static final Double lifeExpectancy = 50.0;
+    private static final Double lifeExpectancy = 45.0;
 
     private static final NeighbourType neighbourType = NeighbourType.MOORE;
     private static final int r = 1;
@@ -71,8 +71,8 @@ public class InputFileCreator {
 
     private static int[][] populateRandom2D() {
         int[][] env = new int[M_2D][M_2D];
-        double lowerPercentage = 0.49;
-        double upperPercentage = 0.51;
+        double lowerPercentage = 0.4;
+        double upperPercentage = 0.6;
         final int fromX = (int) Math.ceil(M_2D * lowerPercentage);
         final int toX = (int) Math.ceil(M_2D * upperPercentage);
         final int fromY = (int) Math.ceil(M_2D * lowerPercentage);
