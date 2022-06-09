@@ -7,6 +7,7 @@ import ar.edu.itba.ss.tp2.parsers.OutputParser;
 
 import java.util.List;
 import java.util.Random;
+import static ar.edu.itba.ss.tp2.InputFileCreator.M_3D;
 
 public class Environment3D {
     private int [][][] env;
@@ -83,7 +84,7 @@ public class Environment3D {
             for (int j = 0; j < y; j++) {
                 for (int k = 0; k < z; k++) {
                     if(env[i][j][k] == 1){
-                        double dist = Math.sqrt((Math.pow(i-50,2) + Math.pow(j-50,2) + Math.pow(k-50, 2)));
+                        double dist = Math.sqrt((Math.pow(i-(M_3D/2.0),2) + Math.pow(j-(M_3D/2.0),2) + Math.pow(k-(M_3D/2.0), 2)));
                         if(dist > max)
                             max = dist;
                     }

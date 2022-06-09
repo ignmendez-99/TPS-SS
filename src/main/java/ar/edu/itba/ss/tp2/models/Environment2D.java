@@ -6,6 +6,8 @@ import ar.edu.itba.ss.tp2.parsers.OutputParser;
 
 import java.util.List;
 
+import static ar.edu.itba.ss.tp2.InputFileCreator.M_2D;
+
 public class Environment2D {
 
     // Variables
@@ -82,7 +84,7 @@ public class Environment2D {
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
                 if(env[i][j] == 1){
-                    double dist = Math.sqrt((Math.pow(i-500,2) + Math.pow(j-500,2)));
+                    double dist = Math.sqrt((Math.pow(i-(M_2D/2.0),2) + Math.pow(j-(M_2D/2.0),2)));
                     if(dist > max)
                         max = dist;
                 }

@@ -17,8 +17,8 @@ public class InputFileCreator {
     private static final NeighbourType neighbourType = NeighbourType.MOORE;
     private static final int r = 1;
 
-    private static final int M_2D = 1000;
-    private static final int M_3D = 100;
+    public static final int M_2D = 1000; // PONER SIEMPRE NUMEROS QUE DEN ENTERO AL DIVIDIRLO POR 2
+    public static final int M_3D = 100;  // PONER SIEMPRE NUMEROS QUE DEN ENTERO AL DIVIDIRLO POR 2
 
     private static final String fileName2D = "src/main/resources/tp2/environment2D";
     private static final String fileName3D = "src/main/resources/tp2/environment3D";
