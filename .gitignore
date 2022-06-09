@@ -2,3 +2,4 @@
 target
 *.csv
 *.xyz
+src/main/resources/tp2/*
