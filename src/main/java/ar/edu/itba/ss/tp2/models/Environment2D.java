@@ -120,11 +120,11 @@ public class Environment2D {
 
     public int VonNeumann(int cx, int cy) {
         int aliveCells = 0;
-        int rowLimit = Math.min((cx + r), this.x-1);
+        int rowLimit = Math.min((cx + r), x-1);
         int aux = 0;
         for (int i = cx - r; i <= rowLimit; i++) {
             if(i >= 0) {
-                for (int j = cy - aux; j <= Math.min(cy + aux, this.y-1); j++) {
+                for (int j = cy - aux; j <= Math.min(cy + aux, y-1); j++) {
                     if (j >= 0 && !(i == cx && j == cy)) {
                         if(env[i][j]==1){
                             aliveCells++;
@@ -150,8 +150,8 @@ public class Environment2D {
 
     public int Moore(int cx, int cy){
         int aliveCells = 0;
-        int rowLimit = Math.min((cx + r), this.x-1);
-        int colLimit = Math.min((cy + r), this.y-1);
+        int rowLimit = Math.min((cx + r), x-1);
+        int colLimit = Math.min((cy + r), y-1);
         for (int i = cx-r; i <= rowLimit; i++) {
             if(i >= 0){
                 for (int j = cy-r; j <= colLimit; j++) {

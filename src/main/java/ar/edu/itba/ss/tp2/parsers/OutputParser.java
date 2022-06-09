@@ -63,7 +63,7 @@ public class OutputParser {
     }
 
     public static void createCleanPythonFile(int n) {
-        Path fileToDeletePath = Paths.get("PythonFiles/outputForPython.csv");
+        Path fileToDeletePath = Paths.get("PythonFiles/outputForPython2.csv");
         first = true;
         try {
             Files.deleteIfExists(fileToDeletePath);
