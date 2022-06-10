@@ -27,19 +27,22 @@ public class InputFileCreator {
     public static final String fileName3D = "src/main/resources/tp2/environment3D" + LIFE_EXP;
 
     public static void main(String[] args) {
-        if(_3D) {
-            int[][][] env = populateRandom3D();
-            createCleanFile(fileName3D);
-            writeToFile3D(env);
-        } else {
-            int[][] env = populateRandom2D();
-            createCleanFile(fileName2D);
-            writeToFile2D(env);
-        }
+        /** 
+         * CODIGO MOVIDO AL MAIN DE GameLife.java PARA ASI SOLO TENER QUE CORRER 1 PROGRAMA
+         */
+//        if(_3D) {
+//            int[][][] env = populateRandom3D();
+//            createCleanFile(fileName3D);
+//            writeToFile3D(env);
+//        } else {
+//            int[][] env = populateRandom2D();
+//            createCleanFile(fileName2D);
+//            writeToFile2D(env);
+//        }
     }
 
 
-    private static int[][][] populateRandom3D() {
+    public static int[][][] populateRandom3D() {
         int[][][] env = new int[M_3D][M_3D][M_3D];
         double lowerPercentage = 0.45;
         double upperPercentage = 0.55;
@@ -72,7 +75,7 @@ public class InputFileCreator {
         return env;
     }
 
-    private static int[][] populateRandom2D() {
+    public static int[][] populateRandom2D() {
         int[][] env = new int[M_2D][M_2D];
         double lowerPercentage = 0.4;
         double upperPercentage = 0.6;
@@ -99,7 +102,7 @@ public class InputFileCreator {
         return env;
     }
 
-    private static void writeToFile3D(int[][][] env) {
+    public static void writeToFile3D(int[][][] env) {
         try {
             StringBuilder dump = new StringBuilder(neighbourType.type + " " + r + "\n");
             dump.append(M_3D + " " + M_3D + " " + M_3D + "\n");
@@ -120,7 +123,7 @@ public class InputFileCreator {
         }
     }
 
-    private static void writeToFile2D(int[][] env) {
+    public static void writeToFile2D(int[][] env) {
         try {
             StringBuilder dump = new StringBuilder(neighbourType.type + " " + r + "\n");
             dump.append(M_2D + " " + M_2D + " " + M_2D + "\n");
@@ -145,7 +148,7 @@ public class InputFileCreator {
         bw.close();
     }
 
-    private static void createCleanFile(String fileName) {
+    public static void createCleanFile(String fileName) {
         Path fileToDeletePath = Paths.get(fileName);
         try {
             Files.deleteIfExists(fileToDeletePath);
