@@ -57,12 +57,15 @@ public class Environment2D {
         OutputParser.createCleanFile();
         OutputParser.createCleanPythonFile(usedCells);
         OutputParser.writeMatrix2DToFile(env, x, y, 0, usedCells, center);
+        OutputParser.writeAux(0,usedCells, getPatternRadius(env, x,y));
 
         int i = 0;
         while( i < iterations && !reachedBorder ) {
             if(usedCells <= 0) {
                 OutputParser.writeMatrix2DToFile(env, x, y, System.currentTimeMillis() - startTime, usedCells, center);
-                System.out.println("All particles are dead after iteration " + i);
+                System.out.println("All particles are dead in iteration " + i);
+                if(i == 0)
+                    OutputParser.writeAux(i,usedCells, 0);
                 break;
             }
             evolve();
