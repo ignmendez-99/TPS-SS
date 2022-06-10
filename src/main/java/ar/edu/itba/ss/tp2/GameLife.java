@@ -25,8 +25,8 @@ public class GameLife {
 
     public static final String LIFE_EXP = "_" + LF;
     public static final String REGLA = "_" + (_3D ? "3D" : "2D") + "_" + RULE;    // _3D_a _3D_b _3D_c _2D_a _2D_b _2D_c
-    private static final String OUTPUT_FILE_3D = "XYZ/outputTP2_3D" + REGLA + LIFE_EXP + ".xyz";
-    private static final String OUTPUT_FILE_2D = "XYZ/outputTP2_2D" + REGLA + LIFE_EXP + ".xyz";
+    private static final String OUTPUT_FILE_3D = "XYZ/outputTP2" + REGLA + LIFE_EXP + ".xyz";
+    private static final String OUTPUT_FILE_2D = "XYZ/outputTP2" + REGLA + LIFE_EXP + ".xyz";
 
 
     public static void main(String[] args) {
