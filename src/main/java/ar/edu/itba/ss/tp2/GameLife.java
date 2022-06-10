@@ -17,7 +17,8 @@ public class GameLife {
      *  PARAMETROS PUBLICOS USADOS POR TODOS
      *********************/
     public static final String REGLA = "_3Da";    // _3Da _3Db _3Dc _2Da _2Db _2Dc
-    public static final String LIFE_EXP = "_10";
+    public static final Double LF = 10.0;         // 10 - 30 - 50 - 75 - 100
+    public static final String LIFE_EXP = "_" + LF;
     public static final Boolean _3D = false;
 
 

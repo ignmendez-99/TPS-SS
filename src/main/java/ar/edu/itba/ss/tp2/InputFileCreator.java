@@ -9,13 +9,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static ar.edu.itba.ss.tp2.GameLife.LIFE_EXP;
-import static ar.edu.itba.ss.tp2.GameLife._3D;
+import static ar.edu.itba.ss.tp2.GameLife.*;
 
 public class InputFileCreator {
-
-    // 10 - 30 - 50 - 75 - 100
-    private static final Double lifeExpectancy = 10.0;
 
     private static final NeighbourType neighbourType = NeighbourType.MOORE;
     private static final int r = 1;
@@ -27,7 +23,7 @@ public class InputFileCreator {
     public static final String fileName3D = "src/main/resources/tp2/environment3D" + LIFE_EXP;
 
     public static void main(String[] args) {
-        /** 
+        /**
          * CODIGO MOVIDO AL MAIN DE GameLife.java PARA ASI SOLO TENER QUE CORRER 1 PROGRAMA
          */
 //        if(_3D) {
@@ -54,7 +50,7 @@ public class InputFileCreator {
         final int toZ = (int) Math.ceil(M_3D * upperPercentage);
 
         int numberOfCellsToActivate = (toX - fromX) * (toY - fromY) * (toZ - fromZ);
-        numberOfCellsToActivate = (int) (numberOfCellsToActivate * (lifeExpectancy/100.0));
+        numberOfCellsToActivate = (int) (numberOfCellsToActivate * (LF/100.0));
 
         int breakAux = 0;
         for (int i = fromX; i < toX; i++) {
@@ -85,7 +81,7 @@ public class InputFileCreator {
         final int toY = (int) Math.ceil(M_2D * upperPercentage);
 
         int numberOfCellsToActivate = (toX - fromX) * (toY - fromY);
-        numberOfCellsToActivate = (int) (numberOfCellsToActivate * (lifeExpectancy/100.0));
+        numberOfCellsToActivate = (int) (numberOfCellsToActivate * (LF/100.0));
 
         int breakAux = 0;
         for (int i = fromX; i < toX; i++) {
