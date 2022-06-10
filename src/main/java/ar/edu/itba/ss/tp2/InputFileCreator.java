@@ -9,9 +9,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class InputFileCreator {
+import static ar.edu.itba.ss.tp2.GameLife.LIFE_EXP;
+import static ar.edu.itba.ss.tp2.GameLife._3D;
 
-    private static final Boolean _3D = true;
+public class InputFileCreator {
 
     // 10 - 30 - 50 - 75 - 100
     private static final Double lifeExpectancy = 10.0;
@@ -22,8 +23,8 @@ public class InputFileCreator {
     public static final int M_2D = 1000; // PONER SIEMPRE NUMEROS QUE DEN ENTERO AL DIVIDIRLO POR 2
     public static final int M_3D = 100;  // PONER SIEMPRE NUMEROS QUE DEN ENTERO AL DIVIDIRLO POR 2
 
-    public static final String fileName2D = "src/main/resources/tp2/environment2D";
-    public static final String fileName3D = "src/main/resources/tp2/environment3D";
+    public static final String fileName2D = "src/main/resources/tp2/environment2D" + LIFE_EXP;
+    public static final String fileName3D = "src/main/resources/tp2/environment3D" + LIFE_EXP;
 
     public static void main(String[] args) {
         if(_3D) {

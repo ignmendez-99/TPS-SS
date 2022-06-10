@@ -10,6 +10,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static ar.edu.itba.ss.tp2.GameLife.LIFE_EXP;
+import static ar.edu.itba.ss.tp2.GameLife.REGLA;
+
 public class OutputParser {
 
     private static String fileName;
@@ -45,7 +48,7 @@ public class OutputParser {
 
     public static void writeAux(int it, int n, double radius) {
         try{
-            String pythonFilename = "PythonFiles/outputForPython2.csv";
+            String pythonFilename = "PythonFiles/outputForPython2" + REGLA + LIFE_EXP + ".csv";
             StringBuilder dump = new StringBuilder("");
             if(first){
                 dump.append("I,N,R\n");
@@ -63,7 +66,7 @@ public class OutputParser {
     }
 
     public static void createCleanPythonFile(int n) {
-        Path fileToDeletePath = Paths.get("PythonFiles/outputForPython2.csv");
+        Path fileToDeletePath = Paths.get("PythonFiles/outputForPython2" + REGLA + LIFE_EXP + ".csv");
         first = true;
         try {
             Files.deleteIfExists(fileToDeletePath);

@@ -14,10 +14,16 @@ import static ar.edu.itba.ss.tp2.InputFileCreator.fileName3D;
 
 public class GameLife {
 
-    private static final Boolean _3D = true;
+    /******************
+     *  PARAMETROS PUBLICOS USADOS POR TODOS
+     *********************/
+    public static final String REGLA = "_3Da";    // _3Da _3Db _3Dc _2Da _2Db _2Dc
+    public static final String LIFE_EXP = "_10";
+    public static final Boolean _3D = false;
 
-    private static final String OUTPUT_FILE_3D = "XYZ/outputTP2_3D.xyz";
-    private static final String OUTPUT_FILE_2D = "XYZ/outputTP2_2D.xyz";
+
+    private static final String OUTPUT_FILE_3D = "XYZ/outputTP2_3D" + REGLA + LIFE_EXP + ".xyz";
+    private static final String OUTPUT_FILE_2D = "XYZ/outputTP2_2D" + REGLA + LIFE_EXP + ".xyz";
 
     private static final int iterations = 200;
 
