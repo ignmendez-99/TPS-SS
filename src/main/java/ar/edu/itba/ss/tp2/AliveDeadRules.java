@@ -1,5 +1,7 @@
 package ar.edu.itba.ss.tp2;
 
+import static ar.edu.itba.ss.tp2.GameLife.RULE;
+
 public class AliveDeadRules {
     //2d
     // restrictivas 3-5 3-5 = 5k
@@ -19,7 +21,7 @@ public class AliveDeadRules {
     private final static int[] rules3D_3 = {19, 10, 18, 10}; //hace q mueran ni muy rapido ni muy lento
 
     public static int checkRules2D(int currentState, int aliveNeighbours) {
-        int[] rules = rules2D_2;
+        int[] rules = setRule2D();
         if(currentState == 1) {
             if(aliveNeighbours > rules[0] || aliveNeighbours < rules[1]) {
                 // Estoy vivo, pero me muero porque hay mucha gente o muy poca gente
@@ -40,7 +42,7 @@ public class AliveDeadRules {
     }
 
     public static int checkRules3D(int currentState, int aliveNeighbours) {
-        int[] rules = rules3D_1;
+        int[] rules = setRule3D();
         if(currentState == 1) {
             if(aliveNeighbours > rules[0] || aliveNeighbours < rules[1]) {
                 // Estoy vivo, pero me muero porque hay mucha gente o muy poca gente
@@ -58,5 +60,25 @@ public class AliveDeadRules {
                 return 1;
             }
         }
+    }
+
+    private static int[] setRule2D() {
+        if(RULE.equals("a"))
+            return rules2D_1;
+        if(RULE.equals("b"))
+            return rules2D_2;
+        if(RULE.equals("c"))
+            return rules2D_3;
+        return null;
+    }
+
+    private static int[] setRule3D() {
+        if(RULE.equals("a"))
+            return rules3D_1;
+        if(RULE.equals("b"))
+            return rules3D_2;
+        if(RULE.equals("c"))
+            return rules3D_3;
+        return null;
     }
 }

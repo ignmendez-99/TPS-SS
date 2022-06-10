@@ -14,18 +14,20 @@ import static ar.edu.itba.ss.tp2.InputFileCreator.*;
 public class GameLife {
 
     /******************
-     *  PARAMETROS PUBLICOS USADOS POR TODOS
+     *  PARAMETROS PARA VARIAR
      *********************/
-    public static final String REGLA = "_3Da";    // _3Da _3Db _3Dc _2Da _2Db _2Dc
-    public static final Double LF = 10.0;         // 10 - 30 - 50 - 75 - 100
-    public static final String LIFE_EXP = "_" + LF;
     public static final Boolean _3D = false;
+    public static final String RULE = "a";  // a  b  c
+    public static final Double LF = 10.0;   // 10 - 30 - 50 - 75 - 100
+    private static final int iterations = 200;
 
 
+
+    public static final String LIFE_EXP = "_" + LF;
+    public static final String REGLA = "_" + (_3D ? "3D" : "2D") + "_" + RULE;    // _3D_a _3D_b _3D_c _2D_a _2D_b _2D_c
     private static final String OUTPUT_FILE_3D = "XYZ/outputTP2_3D" + REGLA + LIFE_EXP + ".xyz";
     private static final String OUTPUT_FILE_2D = "XYZ/outputTP2_2D" + REGLA + LIFE_EXP + ".xyz";
 
-    private static final int iterations = 200;
 
     public static void main(String[] args) {
         if(_3D) {
