@@ -19,8 +19,8 @@ public class InputFileCreator {
     public static final int M_2D = 1000; // PONER SIEMPRE NUMEROS QUE DEN ENTERO AL DIVIDIRLO POR 2
     public static final int M_3D = 100;  // PONER SIEMPRE NUMEROS QUE DEN ENTERO AL DIVIDIRLO POR 2
 
-    public static final String fileName2D = "src/main/resources/tp2/environment2D" + LIFE_EXP;
-    public static final String fileName3D = "src/main/resources/tp2/environment3D" + LIFE_EXP;
+    public static String fileName2D;
+    public static String fileName3D;
 
     public static void main(String[] args) {
         /**

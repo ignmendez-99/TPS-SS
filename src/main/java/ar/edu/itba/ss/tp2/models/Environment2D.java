@@ -72,7 +72,7 @@ public class Environment2D {
                 OutputParser.writeAux(i,usedCells, radius);
                 OutputParser.writeMatrix2DToFile(env, x, y, System.currentTimeMillis() - startTime, usedCells, center);
             }
-            System.out.println("Finished iteration " + i);
+            // System.out.println("Finished iteration " + i);
             if(reachedBorder) {
                 System.out.println("System reached border in iteration " + i);
             }

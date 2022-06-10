@@ -71,7 +71,7 @@ public class Environment3D {
                 OutputParser.writeAux(i, usedCells, rad);
                 OutputParser.writeMatrix3DToFile(env, x, y, z, System.currentTimeMillis() - startTime, usedCells, center);
             }
-            System.out.println("Finished iteration " + i);
+            // System.out.println("Finished iteration " + i);
             if(reachedBorder) {
                 System.out.println("System reached border in iteration " + i);
             }
