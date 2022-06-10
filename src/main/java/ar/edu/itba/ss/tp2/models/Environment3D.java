@@ -56,22 +56,23 @@ public class Environment3D {
         OutputParser.createCleanFile();
         OutputParser.createCleanPythonFile(usedCells);
         OutputParser.writeMatrix3DToFile(env, x, y, z, 0, usedCells, center);
-        OutputParser.writeAux(0,usedCells, getPatternRadius(env, x,y,z));
+        OutputParser.writeAux(0,usedCells, getPatternRadius(env, x,y,z),0);
 
         int i = 0;
+        int change_state = 0;
         while( i < iterations && !reachedBorder ) {
             if(usedCells <= 0) {
                 OutputParser.writeMatrix3DToFile(env, x, y, z, System.currentTimeMillis() - startTime, usedCells, center);
                 System.out.println("All particles are dead in iteration " + i);
                 if(i == 0)
-                    OutputParser.writeAux(i,usedCells, 0);
+                    OutputParser.writeAux(i,usedCells, 0, 0);
                 break;
             }
-            evolve();
+            change_state = evolve();
             i++;
             if(usedCells > 0){
                 double rad = getPatternRadius(env, x, y, z);
-                OutputParser.writeAux(i, usedCells, rad);
+                OutputParser.writeAux(i, usedCells, rad, change_state);
                 OutputParser.writeMatrix3DToFile(env, x, y, z, System.currentTimeMillis() - startTime, usedCells, center);
             }
             // System.out.println("Finished iteration " + i);
@@ -97,9 +98,10 @@ public class Environment3D {
         return max;
     }
 
-    public void evolve () {
+    public int evolve () {
         //usedcells la reinicio
         usedCells=0;
+        int change_state = 0;
         int [][][] futureEnv = new int[x][y][z];
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
@@ -107,12 +109,15 @@ public class Environment3D {
                     if (neighbourType == NeighbourType.VON_NEUMANN) {
                         futureEnv[i][j][k] = VonNeumann(i, j, k);
                     } else if (neighbourType == NeighbourType.MOORE) {
+                        if(futureEnv[i][j][k] != env[i][j][k])
+                            change_state++;
                         futureEnv[i][j][k] = Moore(i, j, k);
                     }
                 }
             }
         }
         env = futureEnv;
+        return change_state;
     }
 
     public int VonNeumann(int cx, int cy, int cz) {

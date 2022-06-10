@@ -46,15 +46,15 @@ public class OutputParser {
         }
     }
 
-    public static void writeAux(int it, int n, double radius) {
+    public static void writeAux(int it, int n, double radius, int change_state) {
         try{
             String pythonFilename = "PythonFiles/outputForPython2" + REGLA + LIFE_EXP + ".csv";
             StringBuilder dump = new StringBuilder("");
             if(first){
-                dump.append("I,N,R\n");
+                dump.append("I,N,R,CS\n");
                 first = false;
             }
-            dump.append(it).append(",").append(n).append(",").append(radius).append("\n");
+            dump.append(it).append(",").append(n).append(",").append(radius).append(",").append(change_state).append("\n");
             FileWriter fw = new FileWriter(pythonFilename, true);
             BufferedWriter bw = new BufferedWriter(fw);
             bw.write(dump.toString());

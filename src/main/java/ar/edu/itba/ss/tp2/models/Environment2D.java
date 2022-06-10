@@ -57,22 +57,23 @@ public class Environment2D {
         OutputParser.createCleanFile();
         OutputParser.createCleanPythonFile(usedCells);
         OutputParser.writeMatrix2DToFile(env, x, y, 0, usedCells, center);
-        OutputParser.writeAux(0,usedCells, getPatternRadius(env, x,y));
+        OutputParser.writeAux(0,usedCells, getPatternRadius(env, x,y),0);
 
         int i = 0;
+        int change_state = 0;
         while( i < iterations && !reachedBorder ) {
             if(usedCells <= 0) {
                 OutputParser.writeMatrix2DToFile(env, x, y, System.currentTimeMillis() - startTime, usedCells, center);
                 System.out.println("All particles are dead in iteration " + i);
                 if(i == 0)
-                    OutputParser.writeAux(i,usedCells, 0);
+                    OutputParser.writeAux(i,usedCells, 0, change_state);
                 break;
             }
-            evolve();
+            change_state = evolve();
             i++;
             if(usedCells > 0){
                 double radius = getPatternRadius(env, x,y);
-                OutputParser.writeAux(i,usedCells, radius);
+                OutputParser.writeAux(i,usedCells, radius, change_state);
                 OutputParser.writeMatrix2DToFile(env, x, y, System.currentTimeMillis() - startTime, usedCells, center);
             }
             // System.out.println("Finished iteration " + i);
@@ -96,20 +97,24 @@ public class Environment2D {
         return max;
     }
 
-    public void evolve () {
+    public int evolve () {
         //usedcells la reinicio
         usedCells=0;
+        int change_state = 0;
         int [][] futureEnv = new int[x][y];
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
                 if(neighbourType == NeighbourType.VON_NEUMANN){
                     futureEnv[i][j] = VonNeumann(i, j);
                 } else if(neighbourType == NeighbourType.MOORE){
+                    if(futureEnv[i][j] != env[i][j])
+                        change_state++;
                     futureEnv[i][j] = Moore(i,j);
                 }
             }
         }
         env = futureEnv;
+        return change_state;
     }
 
     public void printMatrix(int [][] m){

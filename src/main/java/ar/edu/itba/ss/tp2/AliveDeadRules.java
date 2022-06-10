@@ -16,8 +16,8 @@ public class AliveDeadRules {
     private final static int[] rules2D_2 = {6, 3, 6, 3}; //poco restrictiva
     private final static int[] rules2D_3 = {4, 4, 4, 3}; //mata programas
     
-    private final static int[] rules3D_1 = {3, 2, 3, 3}; //poco restrictiva se va a la mierda
-    private final static int[] rules3D_2 = {13, 5, 13, 12}; 
+    private final static int[] rules3D_1 = {5, 5, 4, 4}; //poco restrictiva se va a la mierda
+    private final static int[] rules3D_2 = {12, 5, 15, 11}; 
     private final static int[] rules3D_3 = {19, 10, 18, 10}; //hace q mueran ni muy rapido ni muy lento
 
     public static int checkRules2D(int currentState, int aliveNeighbours) {

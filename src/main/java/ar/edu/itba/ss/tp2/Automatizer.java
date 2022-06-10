@@ -8,8 +8,8 @@ import java.io.IOException;
 public class Automatizer {
 
     public static void main(String[] args) throws IOException {
-        final double[] lf = {15, 25, 40, 60, 80, 100};
-        final boolean[] _3d_2d = {true, false};
+        final double[] lf = {15, 25, 40, 55, 65, 75};
+        final boolean[] _3d_2d = {false, true};
         final String[] rules = {"a", "b", "c"};
 
         // 6x2x3 = 36 corridas
