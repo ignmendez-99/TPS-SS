@@ -12,7 +12,9 @@ import java.nio.file.Paths;
 public class InputFileCreator {
 
     private static final Boolean _3D = true;
-    private static final Double lifeExpectancy = 45.0;
+
+    // 10 - 30 - 50 - 75 - 100
+    private static final Double lifeExpectancy = 10.0;
 
     private static final NeighbourType neighbourType = NeighbourType.MOORE;
     private static final int r = 1;
@@ -20,8 +22,8 @@ public class InputFileCreator {
     public static final int M_2D = 1000; // PONER SIEMPRE NUMEROS QUE DEN ENTERO AL DIVIDIRLO POR 2
     public static final int M_3D = 100;  // PONER SIEMPRE NUMEROS QUE DEN ENTERO AL DIVIDIRLO POR 2
 
-    private static final String fileName2D = "src/main/resources/tp2/environment2D";
-    private static final String fileName3D = "src/main/resources/tp2/environment3D";
+    public static final String fileName2D = "src/main/resources/tp2/environment2D";
+    public static final String fileName3D = "src/main/resources/tp2/environment3D";
 
     public static void main(String[] args) {
         if(_3D) {

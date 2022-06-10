@@ -9,6 +9,9 @@ import ar.edu.itba.ss.tp2.parsers.OutputParser;
 
 import java.util.List;
 
+import static ar.edu.itba.ss.tp2.InputFileCreator.fileName2D;
+import static ar.edu.itba.ss.tp2.InputFileCreator.fileName3D;
+
 public class GameLife {
 
     private static final Boolean _3D = true;
@@ -21,12 +24,12 @@ public class GameLife {
     public static void main(String[] args) {
         if(_3D) {
             OutputParser.setFileName(OUTPUT_FILE_3D);
-            List<Pair<Integer, Pair<Integer, Integer>>> staticInfo3D = EnvironmentParser3D.staticParsing("src/main/resources/tp2/environment3D");
+            List<Pair<Integer, Pair<Integer, Integer>>> staticInfo3D = EnvironmentParser3D.staticParsing("src/main/resources/tp2/"+fileName2D);
             Environment3D env3D = new Environment3D(staticInfo3D);
             env3D.simulate(iterations);
         } else {
             OutputParser.setFileName(OUTPUT_FILE_2D);
-            List<Pair<Integer, Integer>> staticInfo = EnvironmentParser2D.staticParsing("src/main/resources/tp2/environment2D");
+            List<Pair<Integer, Integer>> staticInfo = EnvironmentParser2D.staticParsing("src/main/resources/tp2/"+fileName3D);
             Environment2D env = new Environment2D(staticInfo);
             env.simulate(iterations);
         }
