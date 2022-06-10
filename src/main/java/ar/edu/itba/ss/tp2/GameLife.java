@@ -32,7 +32,7 @@ public class GameLife {
             createCleanFile(fileName3D);
             writeToFile3D(env);
             OutputParser.setFileName(OUTPUT_FILE_3D);
-            List<Pair<Integer, Pair<Integer, Integer>>> staticInfo3D = EnvironmentParser3D.staticParsing("src/main/resources/tp2/"+fileName2D);
+            List<Pair<Integer, Pair<Integer, Integer>>> staticInfo3D = EnvironmentParser3D.staticParsing(fileName3D);
             Environment3D env3D = new Environment3D(staticInfo3D);
             env3D.simulate(iterations);
         } else {
@@ -40,7 +40,7 @@ public class GameLife {
             createCleanFile(fileName2D);
             writeToFile2D(env);
             OutputParser.setFileName(OUTPUT_FILE_2D);
-            List<Pair<Integer, Integer>> staticInfo = EnvironmentParser2D.staticParsing("src/main/resources/tp2/"+fileName3D);
+            List<Pair<Integer, Integer>> staticInfo = EnvironmentParser2D.staticParsing(fileName2D);
             Environment2D env2D = new Environment2D(staticInfo);
             env2D.simulate(iterations);
         }
