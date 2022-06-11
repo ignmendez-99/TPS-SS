@@ -107,9 +107,9 @@ public class Environment2D {
                 if(neighbourType == NeighbourType.VON_NEUMANN){
                     futureEnv[i][j] = VonNeumann(i, j);
                 } else if(neighbourType == NeighbourType.MOORE){
+                    futureEnv[i][j] = Moore(i,j);
                     if(futureEnv[i][j] != env[i][j])
                         change_state++;
-                    futureEnv[i][j] = Moore(i,j);
                 }
             }
         }
