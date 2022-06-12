@@ -19,6 +19,7 @@ public class GameLife {
     public static Boolean _3D = false;
     public static String RULE = "a";  // a  b  c
     public static Double LF = 15.0;   // 15, 25, 40, 60, 80, 100
+    public static String corrida = "1";
     private static final int iterations = 200;
 
 
